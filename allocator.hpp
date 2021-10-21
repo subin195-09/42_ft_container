@@ -2,5 +2,6 @@
 # define ALLOCATOR_HPP
 
 #include <iostream>
+#include <memory>
 
 #endif
