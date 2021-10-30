@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 19:21:43 by skim              #+#    #+#             */
-/*   Updated: 2021/10/29 20:17:39 by skim             ###   ########.fr       */
+/*   Updated: 2021/10/30 15:34:21 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -466,10 +466,158 @@ namespace ft
 			vectorReverseConstIterator(const T *ptr = NULL) : ptr(ptr) {}
 			vectorReverseConstIterator(const vectorReverseConstIterator<T> &origin) : ptr(origin.ptr) {}
 			vectorReverseConstIterator(const vectorReverseIterator<T> &origin) : ptr(origin.getPtr()) {}
-			vectorReverseConstIterator(const vectorConstIterator<T> &origin) : ptr(origin.getPtr() - 1) {}
+			vectorReverseConstIterator(const vectorConstIterator<T> &origin) : ptr(origin.getPtr() - 1) {} // origin.getPtr() 인가??
 			vectorReverseConstIterator(const vectorIterator<T> &origin) : ptr(origin.getPtr() - 1) {}
-			
+
+			vectorReverseConstIterator<T>	&operator=(const vectorReverseConstIterator<T> &target)
+			{
+				ptr = target.ptr;
+				return (*this);
+			}
+			vectorReverseConstIterator<T>	&operator=(const vectorReverseIterator<T> &target)
+			{
+				ptr = target.getPtr();
+				return (*this);
+			}
+			~vectorReverseConstIterator(void) {}
+
+			T						*getPtr(void) const
+			{
+				return (ptr);
+			}
+			vectorConstIterator<T>	base()
+			{
+				return (vectorConstIterator<T>(ptr + 1));
+			}
+
+			const T	&operator*(void) const
+			{
+				return (*ptr);
+			}
+			const T	*operator->(void) const
+			{
+				return (&(this->operator*())));
+			}
+
+			vectorReverseConstIterator<T>	&operator++(void)
+			{
+				ptr--;
+				return (*this);
+			}
+			vectorReverseConstIterator<T>	operator++(int)
+			{
+				vectorReverseConstIterator<T>	tmp(*this);
+				ptr--;
+				return (tmp);
+			}
+			vectorReverseConstIterator<T>	&operator--(void)
+			{
+				ptr++;
+				return (*this);
+			}
+			vectorReverseConstIterator<T>	operator--(int)
+			{
+				vectorReverseConstIterator<T>	tmp(*this);
+				ptr++;
+				return (tmp);
+			}
+
+			vectorReverseConstIterator<T>	operator+(unsigned int n) const
+			{
+				return (vectorReverseConstIterator<T>(ptr - n);
+			}
+			unsigned int					operator+(const vectorReverseConstIterator<T> &target) const
+			{
+				return (ptr - target.getPtr());
+			}
+			unsigned int					operator+(const vectorReverseIterator<T> &target) const
+			{
+				return (ptr - target.getPtr());
+			}
+			vectorReverseConstIterator<T>	operator-(unsigned int n) const
+			{
+				return (vectorReverseConstIterator<T>(ptr + n);
+			}
+			unsigned int					operator-(const vectorReverseConstIterator<T> &target) const // 확인을 해보자
+			{
+				// return (target.getPtr() - ptr);
+				return (ptr + target.getPtr());
+			}
+			unsigned int					operator-(const vectorReverseIterator<T> &target) const
+			{
+				return (ptr + target.getPtr());
+			}
+
+			vectorReverseConstIterator<T>	&operator+=(unsigned int n)
+			{
+				ptr -= n;
+				return (*this);
+			}
+			vectorReverseConstIterator<T>	&operator-=(unsigned int n)
+			{
+				ptr += n;
+				return (*this);
+			}
+
+			T		&operator[](unsigned int n) const
+			{
+				return (*(this->operator+(n)));
+			}
+			bool	operator==(const vectodReverseConstIterator<T> &target) const
+			{
+				return (ptr == target.getPtr());
+			}
+			bool	operator==(const vectorReverseIterator<T> &target) const
+			{
+				return (ptr == target.getPtr());
+			}
+			bool	operator!=(const vectorReverseConstIterator<T> &target) const
+			{
+				return (!(this->operator==(target)));
+			}
+			bool	operator!=(const vectorReverseIterator<T> &target) const
+			{
+				return (!(this->operator==(target)));
+			}
+			bool	operator<(const vectorReverseConstIterator<T> &target) const
+			{
+				return (ptr > target.getPtr());
+			}
+			bool	operator<(const vectorReverseIterator<T> &target) const
+			{
+				return (ptr > target.getPtr());
+			}
+			bool	operator<=(const vectorReverseConstIterator<T> &target) const
+			{
+				return ((this->operator<(target)) || (this->operator==(target)));
+			}
+			bool	operator<=(const vectorReverseIterator<T> &target) const
+			{
+				return ((this->operator<(target)) || (this->operator==(target)));
+			}
+			bool	operator>(const vectorReverseConstIterator<T> &target) const
+			{
+				return (ptr < target.getPtr());
+			}
+			bool	operator>(const vectorReverseIterator<T> &target) const
+			{
+				return (ptr < target.getPtr());
+			}
+			bool	operator>=(const vectorReverseConstIterator<T> &target) const
+			{
+				return ((this->operator>(target)) || (this->operator==(target)));
+			}
+			bool	operator>=(const vectorReverseIterator<T> &target) const
+			{
+				return ((this->operator>(target)) || (this->operator==(target)));
+			}
 	};
+
+	template<typename T>
+	vectorReverseConstIterator<T>	operator+(unsigned int n, const vectorReverseConstIterator<T> &target)
+	{
+		return (vectorReverseConstIterator<T>(&(*target) - n));
+	}
 }
 
 #endif
