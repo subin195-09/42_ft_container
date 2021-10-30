@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 19:41:05 by skim              #+#    #+#             */
-/*   Updated: 2021/10/30 14:54:29 by skim             ###   ########.fr       */
+/*   Updated: 2021/10/30 15:38:13 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 
 #include <iostream>
 #include <memory>
-#include <vector>
+#include "vector_iterator.hpp"
+// #include <vector>
 
 namespace ft
 {
@@ -94,11 +95,10 @@ namespace ft
 			typedef const T										&const_reference;
 			typedef T											*pointer;
 			typedef const T										*const_pointer;
-			// 내가 vector iterator를 구현해야함
-			typedef implementation-defined						iterator;
-			typedef implementation-defined						const_iterator;
-			typedef std::reverse_iterator<iterator>				reverse_iterator;
-			typedef std::reverse_iterator<const_iterator>		const_reverse_iterator
+			typedef vectorIterator<T>							iterator;
+			typedef vectorConstIterator<T>						const_iterator;
+			typedef vectorReverseIterator<T>					reverse_iterator;
+			typedef vectorReverseConstIterator<T>				const_reverse_iterator
 
 			/** constructor **/
 			// default constructor
