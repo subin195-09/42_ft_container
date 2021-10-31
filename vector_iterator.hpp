@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 19:21:43 by skim              #+#    #+#             */
-/*   Updated: 2021/10/30 15:35:02 by skim             ###   ########.fr       */
+/*   Updated: 2021/10/31 16:36:49 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,11 +112,11 @@ namespace ft
 			}
 			bool	operator==(const vectorConstIterator<T> &target) const
 			{
-				return (ptr == origin.getPtr());
+				return (ptr == target.getPtr());
 			}
 			bool	operator==(const vectorIterator<T> &target) const
 			{
-				return (ptr == origin.getPtr());
+				return (ptr == target.getPtr());
 			}
 			bool	operator!=(const vectorConstIterator<T> &target) const
 			{
@@ -128,11 +128,11 @@ namespace ft
 			}
 			bool	operator<(const vectorConstIterator<T> &target) const
 			{
-				return (ptr < origin.getPtr());
+				return (ptr < target.getPtr());
 			}
 			bool	operator<(const vectorIterator<T> &target) const
 			{
-				return (ptr < origin.getPtr());
+				return (ptr < target.getPtr());
 			}
 			bool	operator<=(const vectorConstIterator<T> &target) const
 			{
@@ -144,11 +144,11 @@ namespace ft
 			}
 			bool	operator>(const vectorConstIterator<T> &target) const
 			{
-				return (ptr > origin.getPtr());
+				return (ptr > target.getPtr());
 			}
 			bool	operator>(const vectorIterator<T> &target) const
 			{
-				return (ptr > origin.getPtr());
+				return (ptr > target.getPtr());
 			}
 			bool	operator>=(const vectorConstIterator<T> &target) const
 			{
@@ -258,11 +258,11 @@ namespace ft
 			}
 			bool	operator==(const vectorConstIterator<T> &target) const
 			{
-				return (ptr == origin.getPtr());
+				return (ptr == target.getPtr());
 			}
 			bool	operator==(const vectorIterator<T> &target) const
 			{
-				return (ptr == origin.getPtr());
+				return (ptr == target.getPtr());
 			}
 			bool	operator!=(const vectorConstIterator<T> &target) const
 			{
@@ -274,11 +274,11 @@ namespace ft
 			}
 			bool	operator<(const vectorConstIterator<T> &target) const
 			{
-				return (ptr < origin.getPtr());
+				return (ptr < target.getPtr());
 			}
 			bool	operator<(const vectorIterator<T> &target) const
 			{
-				return (ptr < origin.getPtr());
+				return (ptr < target.getPtr());
 			}
 			bool	operator<=(const vectorConstIterator<T> &target) const
 			{
@@ -290,11 +290,11 @@ namespace ft
 			}
 			bool	operator>(const vectorConstIterator<T> &target) const
 			{
-				return (ptr > origin.getPtr());
+				return (ptr > target.getPtr());
 			}
 			bool	operator>(const vectorIterator<T> &target) const
 			{
-				return (ptr > origin.getPtr());
+				return (ptr > target.getPtr());
 			}
 			bool	operator>=(const vectorConstIterator<T> &target) const
 			{
@@ -403,11 +403,11 @@ namespace ft
 			}
 			bool	operator==(const vectorReverseIterator<T> &target) const
 			{
-				return (ptr == origin.getPtr());
+				return (ptr == target.getPtr());
 			}
 			bool	operator==(const vectorReverseConstIterator<T> &target) const
 			{
-				return (ptr == origin.getPtr());
+				return (ptr == target.getPtr());
 			}
 			bool	operator!=(const vectorReverseIterator<T> &target) const
 			{
@@ -419,11 +419,11 @@ namespace ft
 			}
 			bool	operator<(const vectorReverseIterator<T> &target) const
 			{
-				return (ptr > origin.getPtr());
+				return (ptr > target.getPtr());
 			}
 			bool	operator<(const vectorReverseConstIterator<T> &target) const
 			{
-				return (ptr > origin.getPtr());
+				return (ptr > target.getPtr());
 			}
 			bool	operator<=(const vectorReverseIterator<T> &target) const
 			{
@@ -435,11 +435,11 @@ namespace ft
 			}
 			bool	operator>(const vectorReverseIterator<T> &target) const
 			{
-				return (ptr < origin.getPtr());
+				return (ptr < target.getPtr());
 			}
 			bool	operator>(const vectorReverseConstIterator<T> &target) const
 			{
-				return (ptr < origin.getPtr());
+				return (ptr < target.getPtr());
 			}
 			bool	operator>=(const vectorReverseIterator<T> &target) const
 			{
@@ -466,7 +466,7 @@ namespace ft
 			vectorReverseConstIterator(const T *ptr = NULL) : ptr(ptr) {}
 			vectorReverseConstIterator(const vectorReverseConstIterator<T> &origin) : ptr(origin.ptr) {}
 			vectorReverseConstIterator(const vectorReverseIterator<T> &origin) : ptr(origin.getPtr()) {}
-			vectorReverseConstIterator(const vectorConstIterator<T> &origin) : ptr(origin.getPtr() - 1) {} // origin.getPtr() 인가??
+			vectorReverseConstIterator(const vectorConstIterator<T> &origin) : ptr(origin.getPtr() - 1) {} // target.getPtr() 인가??
 			vectorReverseConstIterator(const vectorIterator<T> &origin) : ptr(origin.getPtr() - 1) {}
 
 			vectorReverseConstIterator<T>	&operator=(const vectorReverseConstIterator<T> &target)
@@ -496,7 +496,7 @@ namespace ft
 			}
 			const T	*operator->(void) const
 			{
-				return (&(this->operator*())));
+				return (&(this->operator*()));
 			}
 
 			vectorReverseConstIterator<T>	&operator++(void)
@@ -524,7 +524,7 @@ namespace ft
 
 			vectorReverseConstIterator<T>	operator+(unsigned int n) const
 			{
-				return (vectorReverseConstIterator<T>(ptr - n);
+				return (vectorReverseConstIterator<T>(ptr - n));
 			}
 			unsigned int					operator+(const vectorReverseConstIterator<T> &target) const
 			{
@@ -536,7 +536,7 @@ namespace ft
 			}
 			vectorReverseConstIterator<T>	operator-(unsigned int n) const
 			{
-				return (vectorReverseConstIterator<T>(ptr + n);
+				return (vectorReverseConstIterator<T>(ptr + n));
 			}
 			unsigned int					operator-(const vectorReverseConstIterator<T> &target) const // 확인을 해보자
 			{
@@ -563,7 +563,7 @@ namespace ft
 			{
 				return (*(this->operator+(n)));
 			}
-			bool	operator==(const vectodReverseConstIterator<T> &target) const
+			bool	operator==(const vectorReverseConstIterator<T> &target) const
 			{
 				return (ptr == target.getPtr());
 			}

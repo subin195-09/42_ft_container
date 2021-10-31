@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 19:41:05 by skim              #+#    #+#             */
-/*   Updated: 2021/10/30 17:35:38 by skim             ###   ########.fr       */
+/*   Updated: 2021/10/31 16:40:45 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ namespace ft
 		private :
 			T		*arr;
 			size_t	num_of_element;
-			size_t	capacity;
+			size_t	cap;
 
 			void	expand(unsigned int to_size)
 			{
@@ -44,7 +44,7 @@ namespace ft
 					alloc.destroy(arr);
 					alloc.deallocate(arr, num_of_element);
 				}
-				capacity = to_size;
+				cap = to_size;
 				arr = temp;
 			}
 
@@ -64,10 +64,10 @@ namespace ft
 				Alloc			alloc;
 				unsigned int	i = getIdxFromPtr(pos);
 
-				if (shift_size + num_of_element >= capacity)
-					expand( num_of_element + shift_size) * 2);
-				for (unsigned int i = 0; i < num_of_element - idx; i++)
-					setValue(arr + shift_size + num_of_element - 1 + i, *(arr + num_of_element - 1 - i));
+				if (shift_size + num_of_element >= cap)
+					expand((num_of_element + shift_size) * 2);
+				for (unsigned int j = 0; j < num_of_element - i; j++)
+					setValue(arr + shift_size + num_of_element - 1 + j, *(arr + num_of_element - 1 - j));
 			}
 
 			void	shift_back(T *pos, unsigned int shift_size)
@@ -99,24 +99,20 @@ namespace ft
 			typedef vectorIterator<T>							iterator;
 			typedef vectorConstIterator<T>						const_iterator;
 			typedef vectorReverseIterator<T>					reverse_iterator;
-			typedef vectorReverseConstIterator<T>				const_reverse_iterator
+			typedef vectorReverseConstIterator<T>				const_reverse_iterator;
 
 			/** constructor **/
 			// default constructor
 			// explicit : 자동 형변환을 막기 위함
-			explicit vector
-			(const allocator_type& alloc = allocator_type())
-			: arr(NULL), num_of_element(0), capacity(0)
+			explicit vector (const allocator_type& alloc = allocator_type()) : arr(NULL), num_of_element(0), cap(0)
 			{
-				(void)alloc:
-				// capacity = 42, arr를 42개를 할당한 것으로 초기화
+				(void)alloc;
+				// cap = 42, arr를 42개를 할당한 것으로 초기화
 				expand(42);
 			}
 
 			// fill constructor
-			explicit vector
-			(size_type n, const value_type &val = value_type(), const allocator_type() = allocator_type())
-			: arr(NULL), num_of_element(0), capacity(0)
+			explicit vector (size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) : arr(NULL), num_of_element(0), cap(0)
 			{
 				(void)alloc;
 				expand(42);
@@ -128,10 +124,7 @@ namespace ft
 			// iterator를 구현 후 좀 더 공부해 볼 것
 			// 참고 자료: https://github.com/pearan2/ft_containers/wiki/4.-template-%ED%95%A8%EC%88%98-(%ED%81%B4%EB%A0%88%EC%8A%A4%EB%82%B4%EB%B6%80%EC%97%90%EC%84%9C%EC%9D%98-%EB%A9%94%EC%86%8C%EB%93%9C)-%EC%97%90%EC%84%9C-%EC%96%B4%EB%8A%90%ED%95%A8%EC%88%98%EB%A5%BC-%EC%8B%A4%ED%96%89%ED%95%B4%EC%95%BC-%ED%95%A0%EC%A7%80-%EB%AA%A8%ED%98%B8%ED%95%A0%EB%95%8C
 			template <class InputIterator>
-			vector
-			(InputIterator first, InputIterator last, cosnt allocator_type &alloc = allocator_type(),
-			typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type dummy = 0)
-			: arr(NULL), num_of_element(0), capacity(0)
+         	vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type dummy = 0) : arr(NULL), num_of_element(0), cap(0)
 			{
 				(void)alloc;
 				dummy = 0;
@@ -142,7 +135,7 @@ namespace ft
 
 			// copy constructor
 			vector (const vector &x)
-			: arr(NULL), num_of_element(0), capacity(0)
+			: arr(NULL), num_of_element(0), cap(0)
 			{
 				expand(42);
 				insert(begin(), x.begin(), x.end());
@@ -162,7 +155,7 @@ namespace ft
 				Alloc alloc;
 
 				alloc.destroy(arr);
-				alloc.deallocator(arr, capacity);
+				alloc.deallocate(arr, cap);
 			}
 
 			/** iterator **/
@@ -188,12 +181,12 @@ namespace ft
 
 			reverse_iterator		rbegin()
 			{
-				return (reverse_iterator(arr + num_of_element) - 1));
+				return (reverse_iterator(arr + num_of_element) - 1);
 			}
 
 			const_reverse_iterator	rbegin() const
 			{
-				return (const_reverse_iterator(arr + num_of_element) - 1));
+				return (const_reverse_iterator(arr + num_of_element) - 1);
 			}
 
 			reverse_iterator		rend()
@@ -206,7 +199,7 @@ namespace ft
 				return (const_reverse_iterator(arr - 1));
 			}
 
-			/** capacity **/
+			/** cap **/
 			size_type	size() const
 			{
 				return (num_of_element);
@@ -233,7 +226,7 @@ namespace ft
 
 			size_type	capacity() const
 			{
-				return (capacity);
+				return (cap);
 			}
 
 			bool		empty() const
@@ -297,8 +290,8 @@ namespace ft
 			/** modifiers **/
 			void		push_back(const value_type &val)
 			{
-				if (num_of_element >= capacity)
-					expand(capacity * 2);
+				if (num_of_element >= cap)
+					expand(cap * 2);
 				setValue(arr + num_of_element, val);
 				num_of_element++;
 			}
@@ -312,7 +305,7 @@ namespace ft
 			iterator	insert(iterator position, const value_type &val)
 			{
 				// .ptr => getPtr 로 변경해야함
-				T	*pos_ptr = position.ptr;
+				T	*pos_ptr = position.getPtr();
 				shift(pos_ptr, 1);
 				setValue(pos_ptr, val);
 				num_of_element++;
@@ -330,8 +323,8 @@ namespace ft
 
 			// range constructor와 함께 공부할 것
 			template <class InputIterator>
-			void		insert
-			(iterator position, InputIterator first, InputIterator last
+			void		insert \
+			(iterator position, InputIterator first, InputIterator last, \
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type dummy = 0)
 			{
 				dummy = 0;
@@ -358,9 +351,9 @@ namespace ft
 				this->num_of_element = x.num_of_element;
 				x.num_of_element = temp_num;
 
-				unsigned int temp_capacity = this->capacity;
-				this->capacity = x.capacity;
-				x.capacity = temp_capacity;
+				unsigned int temp_cap = this->cap;
+				this->cap = x.cap;
+				x.cap = temp_cap;
 			}
 
 			void		clear()
@@ -377,14 +370,14 @@ namespace ft
 			}
 
 			template <class InputIterator>
-			void		assign
-			(InputIterator first, InputIterator last,
+			void		assign  \
+			(InputIterator first, InputIterator last,\
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type dummy = 0)
 			{
 				dummy = 0;
 				clear();
 				unsigned int i = 0;
-				for (Inputiterator it = first; it != last; it++)
+				for (InputIterator it = first; it != last; it++)
 					setValue(arr + i++, *it);
 				num_of_element += i;
 			}
@@ -394,7 +387,7 @@ namespace ft
 				unsigned int	idx = getIdxFromPtr(position.ptr);
 
 				shift_back(position.ptr, 1);
-				return (iterator(arr + idx);
+				return (iterator(arr + idx));
 			}
 
 			iterator	erase(iterator first, iterator last)
@@ -429,7 +422,7 @@ namespace ft
 	bool	operator< (const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
 	{
 		// utils.hpp에서 구현해야함
-		return (lexicographical_less(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+		return (lexicographical_less(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 
 	template <class T, class Alloc>
