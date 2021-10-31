@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 19:41:05 by skim              #+#    #+#             */
-/*   Updated: 2021/10/31 16:40:45 by skim             ###   ########.fr       */
+/*   Updated: 2021/10/31 17:38:49 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,7 +304,7 @@ namespace ft
 
 			iterator	insert(iterator position, const value_type &val)
 			{
-				// .ptr => getPtr 로 변경해야함
+				// .getPtr() => getPtr 로 변경해야함
 				T	*pos_ptr = position.getPtr();
 				shift(pos_ptr, 1);
 				setValue(pos_ptr, val);
@@ -314,7 +314,7 @@ namespace ft
 
 			void		insert(iterator position, size_type n, const value_type &val)
 			{
-				T	*pos_ptr = position.ptr;
+				T	*pos_ptr = position.getPtr();
 				shift(pos_ptr, n);
 				for (unsigned int i = 0; i < n; i++)
 					setValue(pos_ptr + i, val);
@@ -329,7 +329,7 @@ namespace ft
 			{
 				dummy = 0;
 				unsigned int	len = 0;
-				T				*pos_ptr = position.ptr;
+				T				*pos_ptr = position.getPtr();
 
 				for (InputIterator it = first; it != last; it++)
 					len++;
@@ -384,20 +384,20 @@ namespace ft
 
 			iterator	erase(iterator position)
 			{
-				unsigned int	idx = getIdxFromPtr(position.ptr);
+				unsigned int	idx = getIdxFromPtr(position.getPtr());
 
-				shift_back(position.ptr, 1);
+				shift_back(position.getPtr(), 1);
 				return (iterator(arr + idx));
 			}
 
 			iterator	erase(iterator first, iterator last)
 			{
-				unsigned int	idx = getIdxFromPtr(first.ptr);
+				unsigned int	idx = getIdxFromPtr(first.getPtr());
 
 				unsigned int	i = 0;
 				for (iterator it = first; it != last; it++)
 					i++;
-				shift_back(first.ptr, i);
+				shift_back(first.getPtr(), i);
 				return (iterator(arr + idx));
 			}
 	};

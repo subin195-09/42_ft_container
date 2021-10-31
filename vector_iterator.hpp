@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 19:21:43 by skim              #+#    #+#             */
-/*   Updated: 2021/10/31 16:36:49 by skim             ###   ########.fr       */
+/*   Updated: 2021/10/31 17:37:58 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ namespace ft
 		public :
 			vectorConstIterator(T *ptr = NULL) : ptr(ptr) {}
 			vectorConstIterator(const vectorConstIterator<T> &origin) : ptr(origin.ptr) {}
-			vectorConstIterator(const vectorIterator<T> &origin) : ptr(origin.ptr) {}
+			vectorConstIterator(const vectorIterator<T> &origin) : ptr(origin.getPtr()) {}
 
 			vectorConstIterator<T> &operator=(const vectorConstIterator<T> &origin)
 			{
