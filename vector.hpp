@@ -67,15 +67,15 @@ namespace ft
 				if (shift_size + num_of_element >= cap)
 					expand((num_of_element + shift_size) * 2);
 				for (unsigned int j = 0; j < num_of_element - i; j++)
-					setValue(arr + shift_size + num_of_element - 1 + j, *(arr + num_of_element - 1 - j));
+					setValue(arr + num_of_element - 1 + shift_size - j, *(arr + num_of_element - 1 - j));
 			}
 
 			void	shift_back(T *pos, unsigned int shift_size)
 			{
 				unsigned int	idx = getIdxFromPtr(pos);
 
-				for (unsigned int i = 0; i < num_of_element - shift_size; i++)
-					setValue(arr + idx + i, *(arr + idx + i + 1));
+				for (unsigned int i = idx; i < num_of_element - shift_size; i++)
+					setValue(arr + i, *(arr + i + shift_size));
 				num_of_element -= shift_size;
 			}
 
@@ -212,14 +212,15 @@ namespace ft
 
 			void		resize(size_type n, value_type val = value_type())
 			{
+				unsigned int	noe = num_of_element;
 				if (num_of_element < n)
 				{
-					for (unsigned int i = 0; i < (unsigned int)(n - num_of_element); i++)
+					for (unsigned int i = 0; i < (n - noe); i++)
 						push_back(val);
 				}
 				else
 				{
-					for (unsigned int i = 0; i < (unsigned int)(n - num_of_element); i++)
+					for (unsigned int i = 0; i < (noe - n); i++)
 						pop_back();
 				}
 			}
@@ -304,7 +305,6 @@ namespace ft
 
 			iterator	insert(iterator position, const value_type &val)
 			{
-				// .getPtr() => getPtr 로 변경해야함
 				T	*pos_ptr = position.getPtr();
 				shift(pos_ptr, 1);
 				setValue(pos_ptr, val);
