@@ -21,7 +21,7 @@
 
 
 #ifndef TEST_NS
-# define TEST_NS std
+# define TEST_NS ft
 #endif
 
 # define TESTED_TYPE std::string
@@ -153,25 +153,25 @@ int		main()
 	// TEST_NS::vector<int> vec_assign_first;
 	// TEST_NS::vector<int> vec_assign_second;
 	// TEST_NS::vector<int> vec_assign_third;
-	// TEST_NS::vector<int>::iterator it_insert1;
+	// TEST_NS::vector<int>::iterator it_insert2;
 
 	// vec_assign_first.assign (7,100);             // 7 ints with a value of 100
-	// for (it_insert1=vec_assign_first.begin(); it_insert1 < vec_assign_first.end(); it_insert1++)
-	// 	std::cout << *it_insert1 << ' ';
+	// for (it_insert2=vec_assign_first.begin(); it_insert2 < vec_assign_first.end(); it_insert2++)
+	// 	std::cout << *it_insert2 << ' ';
 	// std::cout << '\n';
 
 	// TEST_NS::vector<int>::iterator it;
 	// it=vec_assign_first.begin()+1;
 
 	// vec_assign_second.assign (it,vec_assign_first.end()-1); // the 5 central values of vec_assign_first
-	// for (it_insert1=vec_assign_second.begin(); it_insert1 < vec_assign_second.end(); it_insert1++)
-	// 	std::cout << *it_insert1 << ' ';
+	// for (it_insert2=vec_assign_second.begin(); it_insert2 < vec_assign_second.end(); it_insert2++)
+	// 	std::cout << *it_insert2 << ' ';
 	// std::cout << '\n';
 
 	// int myints_assign[] = {1776,7,4};
 	// vec_assign_third.assign (myints_assign,myints_assign+3);   // assigning from array.
-	// for (it_insert1=vec_assign_third.begin(); it_insert1 < vec_assign_third.end(); it_insert1++)
-	// 	std::cout << *it_insert1 << ' ';
+	// for (it_insert2=vec_assign_third.begin(); it_insert2 < vec_assign_third.end(); it_insert2++)
+	// 	std::cout << *it_insert2 << ' ';
 	// std::cout << '\n';
 
 	// std::cout << "Size of vec_assign_first: " << int (vec_assign_first.size()) << '\n';
@@ -332,6 +332,9 @@ int		main()
 
 	TEST_NS::vector<int> vec_co_copy(vec_co);
 
+	for (TEST_NS::vector<int>::iterator iter = vec_co.begin(); iter != vec_co.end(); iter++)
+		std::cout << *iter << " ";
+	std::cout << std::endl;
 	for (TEST_NS::vector<int>::iterator iter = vec_co_copy.begin(); iter != vec_co_copy.end(); iter++)
 		std::cout << *iter << " ";
 	std::cout << std::endl;
@@ -430,5 +433,5 @@ int		main()
 	// 	system("leaks a.out > leaks_result; cat leaks_result | grep leaked > leaks_out && rm -rf leaks_result");
 
 
-	// return 0;
+	return 0;
 }
