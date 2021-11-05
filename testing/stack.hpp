@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 17:23:40 by skim              #+#    #+#             */
-/*   Updated: 2021/11/05 03:56:26 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/05 20:12:39 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define STACK_HPP
 
 # include <iostream>
-# include "./vector/vector.hpp"
+# include "../vector/vector.hpp"
 # include <stack>
 
 namespace ft
@@ -27,9 +27,9 @@ namespace ft
 			typedef Container	container_type;
 			typedef size_t		size_type;
 		protected:
-			container_type		_container;
+			container_type		c;
 		public:
-			explicit stact(const container_type &ctnr = container_type()) : c(ctnr) {}
+			explicit stack(const container_type &ctnr = container_type()) : c(ctnr) {}
 			stack(const stack &other) : c(other.c) {}
 			// copy constructor에 대해 좀 더 연구해 볼 것
 			stack &operator=(const stack &other)
