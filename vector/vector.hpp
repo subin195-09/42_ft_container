@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 19:41:05 by skim              #+#    #+#             */
-/*   Updated: 2021/11/05 02:21:47 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/05 19:38:55 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 #include <iostream>
 #include <memory>
 #include "vector_iterator.hpp"
-#include "../template_util.hpp"
+#include "../template_utils.hpp"
+#include "../utils.hpp"
 // #include <vector>
 
 namespace ft
@@ -88,14 +89,16 @@ namespace ft
 			};
 
 		public :
+			typedef ptrdiff_t									difference_type;
 			typedef T											value_type;
+			typedef T											*pointer;
+			typedef T											&reference;
+
 			typedef Alloc										allocator_type;
 			typedef size_t										size_type;
-			typedef ptrdiff_t									difference_type;
-			typedef T											&reference;
 			typedef const T										&const_reference;
-			typedef T											*pointer;
 			typedef const T										*const_pointer;
+
 			typedef vectorIterator<T>							iterator;
 			typedef vectorConstIterator<T>						const_iterator;
 			typedef vectorReverseIterator<T>					reverse_iterator;
@@ -137,7 +140,7 @@ namespace ft
 			vector (const vector &x)
 			: arr(NULL), num_of_element(0), cap(0)
 			{
-				expand(42);
+				expand(7);
 				insert(begin(), x.begin(), x.end());
 			}
 
@@ -330,6 +333,7 @@ namespace ft
 				dummy = 0;
 				unsigned int	len = 0;
 				T				*pos_ptr = position.getPtr();
+				size_t			pos_ptr_idx = this->getIdxFromPtr(pos_ptr);
 
 				for (InputIterator it = first; it != last; it++)
 					len++;
@@ -337,7 +341,7 @@ namespace ft
 
 				unsigned int i = 0;
 				for (InputIterator it = first; it != last; it++)
-					setValue(pos_ptr + i++, *it);
+					setValue(arr + pos_ptr_idx + i++, *it);
 				num_of_element += len;
 			}
 
@@ -409,7 +413,7 @@ namespace ft
 		if (lhs.size() != rhs.size())
 			return (false);
 		// utils.hpp에서 구현해야함
-		return (equal(lhs.begin(), lhs.end(), rhs.begin()));
+		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 
 	template <class T, class Alloc>
@@ -422,7 +426,7 @@ namespace ft
 	bool	operator< (const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
 	{
 		// utils.hpp에서 구현해야함
-		return (lexicographical_less(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 
 	template <class T, class Alloc>
