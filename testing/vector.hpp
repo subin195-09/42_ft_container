@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 19:41:05 by skim              #+#    #+#             */
-/*   Updated: 2021/11/05 20:12:50 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/06 17:23:33 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include <iostream>
 #include <memory>
-#include "../vector/vector_iterator.hpp"
+#include "vector_iterator.hpp"
 #include "../template_utils.hpp"
 #include "../utils.hpp"
 // #include <vector>
@@ -184,7 +184,7 @@ namespace ft
 
 			reverse_iterator		rbegin()
 			{
-				return (reverse_iterator(arr + num_of_element) - 1);
+				return (reverse_iterator(arr + num_of_element - 1));
 			}
 
 			const_reverse_iterator	rbegin() const
@@ -308,19 +308,21 @@ namespace ft
 
 			iterator	insert(iterator position, const value_type &val)
 			{
-				T	*pos_ptr = position.getPtr();
+				T		*pos_ptr = position.getPtr();
+				size_t	pos_ptr_idx = this->getIdxFromPtr(pos_ptr);
 				shift(pos_ptr, 1);
-				setValue(pos_ptr, val);
+				setValue(arr + pos_ptr_idx, val);
 				num_of_element++;
-				return (pos_ptr);
+				return (arr + pos_ptr_idx);
 			}
 
 			void		insert(iterator position, size_type n, const value_type &val)
 			{
-				T	*pos_ptr = position.getPtr();
+				T		*pos_ptr = position.getPtr();
+				size_t	pos_ptr_idx = this->getIdxFromPtr(pos_ptr);
 				shift(pos_ptr, n);
 				for (unsigned int i = 0; i < n; i++)
-					setValue(pos_ptr + i, val);
+					setValue(arr + pos_ptr_idx + i, val);
 				num_of_element += n;
 			}
 
