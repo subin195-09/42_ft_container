@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 17:23:40 by skim              #+#    #+#             */
-/*   Updated: 2021/11/05 19:37:48 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/06 17:43:45 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <iostream>
 # include "../vector/vector.hpp"
-# include <stack>
+// # include <stack>
 
 namespace ft
 {
@@ -47,22 +47,22 @@ namespace ft
 			void				pop() { c.pop_back(); }
 
 			template <class TT, class CC>
-			friend bool	operator==(const stack &lhs, const stack &rhs);
+			friend bool	operator==(const stack<TT, CC> &lhs, const stack<TT, CC> &rhs);
 
 			template <class TT, class CC>
-			friend bool	operator!=(const stack &lhs, const stack &rhs);
+			friend bool	operator!=(const stack<TT, CC> &lhs, const stack<TT, CC> &rhs);
 
 			template <class TT, class CC>
-			friend bool	operator<(const stack &lhs, const stack &rhs);
+			friend bool	operator<(const stack<TT, CC> &lhs, const stack<TT, CC> &rhs);
 
 			template <class TT, class CC>
-			friend bool	operator<=(const stack &lhs, const stack &rhs);
+			friend bool	operator<=(const stack<TT, CC> &lhs, const stack<TT, CC> &rhs);
 
 			template <class TT, class CC>
-			friend bool	operator>(const stack &lhs, const stack &rhs);
+			friend bool	operator>(const stack<TT, CC> &lhs, const stack<TT, CC> &rhs);
 
 			template <class TT, class CC>
-			friend bool	operator>=(const stack &lhs, const stack &rhs);
+			friend bool	operator>=(const stack<TT, CC> &lhs, const stack<TT, CC> &rhs);
 	};
 	template <class T, class Container>
  	bool operator==(const stack<T,Container>& lhs, const stack<T,Container>& rhs)
