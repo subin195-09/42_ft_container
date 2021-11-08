@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 17:23:52 by skim              #+#    #+#             */
-/*   Updated: 2021/11/05 17:32:15 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/08 16:57:38 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,15 @@
 
 namespace ft
 {
+	template <typename T>
+	struct less
+	{
+		bool operator()(const T &lhs, const T &rhs) const
+		{
+			return lhs < rhs;
+		}
+	};
+
 	template <class InputIterator1, class InputIterator2>
 	bool	equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2)
 	{
