@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/11/08 17:26:44 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/10 01:35:03 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ namespace ft
 			saver<Key, T, Compare>	*saver;
 			unsigned int			num_of_ele;
 
+			void	setSV() { saver->root = root; }
+
 		public:
 			class value_compare
 			{
@@ -74,10 +76,190 @@ namespace ft
 			};
 
 			/**constructor**/
+			// default constructor
 			explict map (const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) : root(NULL), num_of_ele(0)
 			{
-				
+				(void)comp;
+				(void)alloc;
+				saver = new saver<Key, T, Compare>();
 			}
+			// range constructor
+			template <class InputIterator>
+			map (InputIterator first, InputIterator last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) : root(NULL), num_of_ele(0)
+			{
+				(void)comp;
+				(void)alloc;
+				saver = new saver<Key, T, Compare>();
+				insert(first, last);
+			}
+			// copy constructor
+			map (const map &x) : root(NULL), num_of_ele(0)
+			{
+				root = new node<Key, T, Compare>(*(x.root));
+				num_of_ele = x.num_of_ele;
+				sv = new saver<Key, T, Compare>();
+				setSV();
+			}
+
+			// =operator
+			map<Key, T, Compare, Alloc>	&operator=(const map<Key, T, Compare, Alloc> &x)
+			{
+				root->deleteAll(root);
+				root = new node<Key, T, Compare>(*(x.root));
+				num_of_ele = x.num_of_ele;
+				setSV();
+				return (*this);
+			}
+			// destructor
+			~map()
+			{
+				if (num_of_ele > 0)
+					root->deleteAll(root);
+				delete (saver);
+			}
+
+			/**iterator**/
+			iterator				begin() { return iterator(root->getLeftest(root), saver); }
+			const_iterator			begin() const { return (const_iterator(root->getLeftest(root), saver)); }
+			iterator				end() { return iterator(NULL, saver); }
+			const_iterator			end() const { return (const_iterator(NULL, saver)); }
+			reverse_iterator		rbegin() { return reverse_iterator(reverse_iterator(root->getRightest(root), saver)); }
+			const_reverse_iterator	rbegin() const { return (const_reverse_iterator(reverse_iterator(root->getRightest(root), saver))); }
+			reverse_iterator		rend() { return reverse_iterator((NULL, saver)); }
+			const_reverse_iterator	rend() const { return (const_reverse_iterator(NULL, saver)); }
+
+			/**capacity**/
+			bool		empty() const { return (num_of_ele == 0); }
+			size_type	size() const { return (num_of_ele); }
+			size_type	max_size() const { return (Alloc().max_size()); }
+
+			/**element_access**/
+			mapped_type	&operator[](const key_type &key)
+			{
+				node<Key, T, Compare> *ret;
+				if (num_of_ele == 0)
+				{
+					num_of_ele++;
+					root = new node<Key, T, Compare>(key);
+					setSV();
+					return (root->ip.second);
+				}
+				else
+				{
+					if ((ret = root->find(root, key)) != NULL)\
+						return (root->ip.second);
+					else
+					{
+						num_of_ele++;
+						retrun (root->mergeInsert(root, key)->ip.second);
+					}
+				}
+			}
+
+			/**modifiers**/
+			// map의 insert 구조에 대해 좀 더 파악해 볼 것
+			// 모든 insert가 첫번째 insert를 call 하게 됨
+			pair<iterator, bool>	insert(const value_type &x)
+			{
+				node<Key, T, Compare>	*ret;
+
+				if (num_of_ele == 0)
+				{
+					num_of_ele++;
+					root = new node<Key, T, Compare>(x.first, x.second);
+					setSV();
+					return (pair<iterator, bool>(iterator(root, saver), true));
+				}
+				else
+				{
+					if ((ret = root->find((root, x.first)) != NULL))
+						return (pair<iterator, bool>(iterator(ret, saver), false));
+					else
+					{
+						num_of_ele++;
+						ret = root->mergeInsert(root, x.first, x.second);
+						return (pair<iterator, bool>(iterator(ret, saver), true));
+					}
+				}
+			}
+
+			iterator				insert(iterator position, const value_type &x)
+			{
+				(void)position;
+				return (insert(x).first);
+			}
+
+			template <class InputIterator>
+			void					insert(InputIterator first, InputIterator last)
+			{
+				for (InputIterator it = first; it != last; it++)
+					insert(pair<const Key, T>(it->first, it->second));
+			}
+
+			size_type				erase(const key_type &key)
+			{
+				if (num_of_ele == 0)
+					return (0);
+				else
+				{
+					if (root->find(root, key) == NULL)
+						return (0);
+					else
+					{
+						root->deleteNode(&root, root, k);
+						setSV();
+						num_of_ele--;
+						if (num_of_ele == 0)
+						{
+							root = NULL;
+							setSV();
+						}
+						return (1);
+					}
+				}
+			}
+
+			void					erase(iterator position)
+			{
+				erase(position->first);
+			}
+
+			void					erase(iterator first, iterator last)
+			{
+				iterator	iter = first;
+				iterator	iter_next;
+				while (iter != last)
+				{
+					iter_next = iter;
+					iter_next++;
+					erase(iter->first);
+					iter = iter_next;
+					if (iter == last)
+						break;
+				}
+			}
+
+			void					swap(map &x)
+			{
+				node<Key, T, Compare>	*tmp = root;
+				root = x.root;
+				x.root = tmp;
+
+				unsigned int	temp_size = num_of_ele;
+				num_of_ele = x.num_of_ele;
+				x.num_of_ele = temp_size;
+			}
+
+			void					clear()
+			{
+				if (num_of_ele == 0)
+					return ;
+				num_of_ele = 0;
+				deleteAll(root);
+				root = NULL;
+			}
+
+			/**observers**/
 	};
 }
 

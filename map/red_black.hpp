@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/09 23:06:08 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/10 00:46:44 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,45 @@ namespace ft
 			node	*left;
 			node	*right;
 			Compare	cmp;
+
+			// priate functions
+
+		public:
+			pair<const Key, T>	ip;
+
+			node() : parent(NULL), eft(NULL), right(NULL) {}
+			node(Key first, T second) = T()) :  parent(NULL), eft(NULL), right(NULL) ,ip(first, second) {}
+			node(const pair<Key, T> &p) : parent(NULL), eft(NULL), right(NULL) ,ip(p) {}
+
+			//deep copy 추후 좀 더 연구해 볼 것
+			node(const node<Key, T, Compare> &origin, node<key, T, Compare> *parent = NULL) : parent(parent), left(NULL), right(NULL), ip(origin.ip)
+			{
+				if (origin.left != NULL)
+					left = new node<Key, T, Compare>(*origin.left, this);
+				if (origin.right != NULL)
+					right = new node<Key, T, Compare>(*origin.right, this);
+			}
+
+			~node() {}
+
+			void deleteAll(node<Key, T, Compare> *root)
+			{
+				if (root == NULL)
+					return ;
+				if (root->left != NULL)
+					deleteAll(root->left);
+				if (root->right != NULL)
+					deleteAll(root->right);
+				delete(root);
+			}
+
+			// getLeftest, getRightest (iterator)
+
+			// find []operator
+			// mergeInsert (insert)
+
+			// deleteNode (erase)
+
 	};
 
 	template <typename Key, typename T, class Compate = ft::less<Key> >
