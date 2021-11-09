@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/08 17:51:56 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/09 23:06:08 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,16 @@
 
 namespace ft
 {
+	template <typename Key, typename T, class Compare = ft::less<Key> >
+	class node
+	{
+		private:
+			node	*parent;
+			node	*left;
+			node	*right;
+			Compare	cmp;
+	};
+
 	template <typename Key, typename T, class Compate = ft::less<Key> >
 	class saver
 	{
