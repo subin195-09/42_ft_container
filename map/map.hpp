@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/11/10 01:35:03 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/10 19:56:51 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,6 +260,71 @@ namespace ft
 			}
 
 			/**observers**/
+			key_compare		key_comp() const { return (Compare()); }
+			value_compare	value_comp() const { return (value_compare()); }
+
+			/**operator**/
+			iterator		find(const key_type &key)
+			{
+				if (num_of_ele == 0)
+					return (iterator(NULL, saver));
+				return (ierator(root->find(root, key), saver));
+			}
+
+			const_iterator	find(const key_type &key) const
+			{
+				if (num_of_ele == 0)
+					return (const_iterator(NULL, saver));
+				return (const_iterator(root->find(root, key), saver));
+			}
+
+			size_type		count(const key_type &key) const
+			{
+				if (num_of_ele == 0 || root->find(root, key) == NULL)
+					return (0);
+				return (1);
+			}
+
+			// lower_bount, upper_bound에 대해 좀 더 알아볼 것!
+			iterator		lower_bound(const key_type &key)
+			{
+				if (num_of_ele == 0)
+					return (iterator(NULL, saver));
+				return (iterator(root->getLowerBound((root, key), saver));
+			}
+
+			const_iterator	lower_bound(const key_type &key) const
+			{
+				if (num_of_ele == 0)
+					return (const_iterator(NULL, saver));
+				else
+					return (const_iterator(root->getLowerBound(root, key), saver));
+			}
+
+			iterator		upper_bound(const key_type &key)
+			{
+				if (num_of_ele == 0)
+					return (iterator(NULL, saver));
+				return (iterator(root->getUpperBound((root, key), saver));
+			}
+
+			const_iterator	upper_bound(const key_type &key) const
+			{
+				if (num_of_ele == 0)
+					return (const_iterator(NULL, saver));
+				else
+					return (const_iterator(root->getUpperBound(root, key), saver));
+			}
+
+			pair<iterator, iterator>	equal_range(const key_type &key)
+			{
+				return (pair<iterator, iterator>(lower_bound(key), upper_bound(key)));
+			}
+
+			pair<const_iterator, const_iterator>	equal_range(const key_type &key) const
+			{
+				return (pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key)));
+			}
 	};
 }
 

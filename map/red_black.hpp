@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/10 00:46:44 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/10 19:22:00 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ namespace ft
 			// mergeInsert (insert)
 
 			// deleteNode (erase)
+
+			// getLowerBound, getUpperBound
 
 	};
 
