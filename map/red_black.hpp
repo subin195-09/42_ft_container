@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/10 19:22:00 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/11 20:40:14 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,13 @@ namespace ft
 
 			~node() {}
 
+			node<Key, T, Compare>	*getRoot(node<Key, T, Compare> *root)
+			{
+				if (root->parent == NULL)
+					return (root);
+				return (getRoot(root->parent));
+			}
+
 			void deleteAll(node<Key, T, Compare> *root)
 			{
 				if (root == NULL)
@@ -58,14 +65,50 @@ namespace ft
 				delete(root);
 			}
 
-			// getLeftest, getRightest (iterator)
-
 			// find []operator
+			node<Key, T, Compare>	*find(node<Key, T, Compare> *root, const Key &key)
+			{
+				if ((cmp(root->ip.first, key) == false) && (cmp(key, root->ip.first) == false))
+					return (root);
+				if (cmp(root->ip.first, key))
+				{
+					if (root->right == NULL)
+						return (NULL);
+					return (find(root->right, key));
+				}
+				else
+				{
+					if (root->left == NULL)
+						return (NULL);
+					return (find(root->left, key));
+				}
+			}
+
 			// mergeInsert (insert)
+
+			// getLowerBound, getUpperBound(key 보다 큰값중 가장 작은 값)
+
+			// getLeftest, getRightest (iterator)
+			node<Key, T, Compare>	*getLeftest(node<Key, T, Compare> *root)
+			{
+				if (root == NULL || root->left == NULL)
+					return (root);
+				return (getLeftest(root->left));
+			}
+
+			node<Key, T, Compare>	*getRightest(node<Key, T, Compare> *root)
+			{
+				if (root == NULL || root->right == NULL)
+					return (root);
+				return (getRightest(root->right));
+			}
 
 			// deleteNode (erase)
 
-			// getLowerBound, getUpperBound
+			// getter
+			node<Key, T, Compare>	*getParent(node<Key, T, Compare> *root) { return (root->parent); }
+			node<Key, T, Compare>	*getLeft(node<Key, T, Compare> *root) { return (root->left); }
+			node<Key, T, Compare>	*getRight(node<Key, T, Compare> *root) { return (root->right); }
 
 	};
 
