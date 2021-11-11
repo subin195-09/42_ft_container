@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/11 20:40:14 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/11 20:41:58 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ namespace ft
 				}
 			}
 
-			// mergeInsert (insert)
+			// mergeInsert (insert) : value를 갱신하거나, key를 추가함
 
 			// getLowerBound, getUpperBound(key 보다 큰값중 가장 작은 값)
 
