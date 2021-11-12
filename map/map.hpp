@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/11/10 20:03:31 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/12 17:44:30 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,7 +269,7 @@ namespace ft
 			{
 				if (num_of_ele == 0)
 					return (iterator(NULL, saver));
-				return (ierator(root->find(root, key), saver));
+				return (iterator(root->find(root, key), saver));
 			}
 
 			const_iterator	find(const key_type &key) const

@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/11 20:41:58 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/12 18:32:29 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ namespace ft
 		public:
 			pair<const Key, T>	ip;
 
-			node() : parent(NULL), eft(NULL), right(NULL) {}
-			node(Key first, T second) = T()) :  parent(NULL), eft(NULL), right(NULL) ,ip(first, second) {}
-			node(const pair<Key, T> &p) : parent(NULL), eft(NULL), right(NULL) ,ip(p) {}
+			node() : parent(NULL), left(NULL), right(NULL) {}
+			node(Key first, T second) = T()) :  parent(NULL), left(NULL), right(NULL) ,ip(first, second) {}
+			node(const pair<Key, T> &p) : parent(NULL), left(NULL), right(NULL) ,ip(p) {}
 
 			//deep copy 추후 좀 더 연구해 볼 것
 			node(const node<Key, T, Compare> &origin, node<key, T, Compare> *parent = NULL) : parent(parent), left(NULL), right(NULL), ip(origin.ip)
@@ -85,8 +85,80 @@ namespace ft
 			}
 
 			// mergeInsert (insert) : value를 갱신하거나, key를 추가함
+			node<Key, T, Compare>	*mergeInsert(node<Key, T, Compare> *root, const &Key k, const &T v = T())
+			{
+				node<Key, T, Compare>	*child;
+
+				if (cmp(root->ip.first, k) == false && cmp(k, root->ip.first))
+				{
+					root->ip.second = v;
+					return (root);
+				}
+				if (cmp(root->ip.first, k))
+				{
+					if (root->right = NULL)
+					{
+						child = new node<Key, T, Compare>(k, v);
+						root->right = child;
+						child->parent = root;
+						return (child);
+					}
+					return (mergeInsert(root->right, k, v));
+				}
+				else
+				{
+					if (root->left = NULL)
+					{
+						child = new node<Key, T, Compare>(k, v);
+						root->left = child;
+						child->parent = root;
+						return (child);
+					}
+					return (mergeInsert(root->left, k, v));
+				}
+			}
 
 			// getLowerBound, getUpperBound(key 보다 큰값중 가장 작은 값)
+			// key보다 큰 값 중 제일 제일 작은 값
+			node<Key, T, Compare>	*getUpperBound(node<Key, T, Compare> *root, const Key &key)
+			{
+				if (!cmp(key, root->ip.first)) // first <= key
+				{
+					if (root->right == NULL)
+						return (NULL);
+					else
+						return (getUpperBound(root->right, key));
+				}
+				else
+				{
+					if (root->left == NULL)
+						return (root);
+					else
+						return (getUpperBound(root->left, key));
+				}
+			}
+
+			// key보다 크거나 같은 값 중 제일 제일 작은 값 (upperbound에서 same을 비교하는 로직만 추가)
+			node<Key, T, Compare>	*getLowerBound(node<Key, T, Compare> *root, const Key &key)
+			{
+				if (root->ip.first == key))
+					return (root);
+
+				if (cmp(root->ip.first, key)) // first < key
+				{
+					if (root->right == NULL)
+						return (root);
+					else
+						return (getLowerBound(root->right, key));
+				}
+				else
+				{
+					if (root->left == NULL)
+						return (NULL);
+					else
+						return (getLowerBound(root->left, key));
+				}
+			}
 
 			// getLeftest, getRightest (iterator)
 			node<Key, T, Compare>	*getLeftest(node<Key, T, Compare> *root)
@@ -104,6 +176,7 @@ namespace ft
 			}
 
 			// deleteNode (erase)
+			
 
 			// getter
 			node<Key, T, Compare>	*getParent(node<Key, T, Compare> *root) { return (root->parent); }
