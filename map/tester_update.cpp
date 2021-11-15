@@ -5,8 +5,8 @@
 #define TESTED_NAMESPACE ft
 #define _pair TESTED_NAMESPACE::pair
 #define T1 char
-#define T2 foo<std::string>
-
+#define T2 int
+typedef _pair<const T1, T2> T3;
 
 template <typename T>
 std::string	printPair(const T &iterator, bool nl = true, std::ostream &o = std::cout)
@@ -69,40 +69,45 @@ void	printSize(T_MAP const &mp, bool print_content = 1)
 
 
 
-typedef TESTED_NAMESPACE::map<T1, T2>::value_type T3;
-typedef TESTED_NAMESPACE::map<T1, T2>::iterator ft_iterator;
-typedef TESTED_NAMESPACE::map<T1, T2>::const_iterator ft_const_iterator;
-
-static int iter = 0;
-
-template <typename MAP>
-void	ft_bound(MAP &mp, const T1 &param)
+template <class MAP>
+void	cmp(const MAP &lhs, const MAP &rhs)
 {
-	ft_iterator ite = mp.end(), it[2];
-	_pair<ft_iterator, ft_iterator> ft_range;
+	static int i = 0;
 
-	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
-	std::cout << "with key [" << param << "]:" << std::endl;
-	it[0] = mp.lower_bound(param); it[1] = mp.upper_bound(param);
-	ft_range = mp.equal_range(param);
-	std::cout << "lower_bound: " << (it[0] == ite ? "end()" : printPair(it[0], false)) << std::endl;
-	std::cout << "upper_bound: " << (it[1] == ite ? "end()" : printPair(it[1], false)) << std::endl;
-	std::cout << "equal_range: " << (ft_range.first == it[0] && ft_range.second == it[1]) << std::endl;
+	std::cout << "############### [" << i++ << "] ###############"  << std::endl;
+	std::cout << "eq: " << (lhs == rhs) << " | ne: " << (lhs != rhs) << std::endl;
+	std::cout << "lt: " << (lhs <  rhs) << " | le: " << (lhs <= rhs) << std::endl;
+	std::cout << "gt: " << (lhs >  rhs) << " | ge: " << (lhs >= rhs) << std::endl;
 }
 
 int		main(void)
 {
-	TESTED_NAMESPACE::map<T1, T2> mp;
+	TESTED_NAMESPACE::map<T1, T2> mp1;
+	TESTED_NAMESPACE::map<T1, T2> mp2;
 
-	mp['a'] = "an element";
-	mp['b'] = "another element";
-	mp['c'] = mp['b'];
-	mp['b'] = "old element";
+	mp1['a'] = 2; mp1['b'] = 3; mp1['c'] = 4; mp1['d'] = 5;
+	mp2['a'] = 2; mp2['b'] = 3; mp2['c'] = 4; mp2['d'] = 5;
 
-	printSize(mp);
+	cmp(mp1, mp1); // 0
+	cmp(mp1, mp2); // 1
 
-	std::cout << "insert a new element via operator[]: " << mp['d'] << std::endl;
+	mp2['e'] = 6; mp2['f'] = 7; mp2['h'] = 8; mp2['h'] = 9;
 
-	printSize(mp);
+	cmp(mp1, mp2); // 2
+	cmp(mp2, mp1); // 3
+
+	(++(++mp1.begin()))->second = 42;
+
+	printSize(mp1);
+	printSize(mp2);
+
+	cmp(mp1, mp2); // 4
+	cmp(mp2, mp1); // 5
+
+	swap(mp1, mp2);
+
+	cmp(mp1, mp2); // 6
+	cmp(mp2, mp1); // 7
+
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 17:23:52 by skim              #+#    #+#             */
-/*   Updated: 2021/11/08 16:57:38 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/15 16:59:17 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,24 @@ namespace ft
 		}
 		return (first1 == last1 && first2 != last2);
 	}
+
+	template <class InputIterator1, class InputIterator2>
+	bool	lexicographical_less(InputIterator1 first1, InputIterator1 last1, \
+									InputIterator2 first2, InputIterator2 last2)
+	{
+		while (first1 != last1 && first2 != last2)
+		{
+			if (*first1 < *first2)
+				return (true);
+			else if (*first2 < *first1)
+				return (false);
+			first1++;
+			first2++;
+		}
+		return (first1 == last1 && first2 != last2);
+	}
+
+	
 }
 
 #endif
