@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 20:03:33 by skim              #+#    #+#             */
-/*   Updated: 2021/11/15 13:29:45 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/15 18:08:11 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,6 +329,7 @@ namespace ft
 			mapReverseConstIterator() {}
 			mapReverseConstIterator(node<Key, T, Compare> *now, saver<Key, T, Compare> *svr) : now(now), svr(svr) {}
 			mapReverseConstIterator(const mapReverseConstIterator<Key, T, Compare> &origin) : now(origin.getNow()), svr(origin.getSV()) {}
+			mapReverseConstIterator(const mapReverseIterator<Key, T, Compare> &origin) : now(origin.getNow()), svr(origin.getSV()) {}
 			mapReverseConstIterator(const mapConstIterator<Key, T, Compare> &origin) : now(origin.getPrev()), svr(origin.getSV()) {}
 			mapReverseConstIterator(const mapIterator<Key, T, Compare> &origin) : now(origin.getPrev()), svr(origin.getSV()) {}
 			~mapReverseConstIterator() {}
@@ -389,7 +390,7 @@ namespace ft
 			bool	operator!=(const mapReverseConstIterator<Key, T, Compare> &origin) const { return (!(this->operator==(origin))); }
 			bool	operator!=(const mapReverseIterator<Key, T, Compare> &origin) const { return (!(this->operator==(origin))); }
 
-			node<Key, T, Compare>	getNow(void) const { return (now); }
+			node<Key, T, Compare>	*getNow(void) const { return (now); }
 			saver<Key, T, Compare>	*getSV(void) const { return (svr); }
 			node<Key, T, Compare>	*getPrev(void) const
 			{

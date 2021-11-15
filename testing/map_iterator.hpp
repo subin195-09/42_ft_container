@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 20:03:33 by skim              #+#    #+#             */
-/*   Updated: 2021/11/15 13:29:45 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/15 17:56:56 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,6 +329,7 @@ namespace ft
 			mapReverseConstIterator() {}
 			mapReverseConstIterator(node<Key, T, Compare> *now, saver<Key, T, Compare> *svr) : now(now), svr(svr) {}
 			mapReverseConstIterator(const mapReverseConstIterator<Key, T, Compare> &origin) : now(origin.getNow()), svr(origin.getSV()) {}
+			mapReverseConstIterator(const mapReverseIterator<Key, T, Compare> &origin) : now(origin.getNow()), svr(origin.getSV()) {}
 			mapReverseConstIterator(const mapConstIterator<Key, T, Compare> &origin) : now(origin.getPrev()), svr(origin.getSV()) {}
 			mapReverseConstIterator(const mapIterator<Key, T, Compare> &origin) : now(origin.getPrev()), svr(origin.getSV()) {}
 			~mapReverseConstIterator() {}

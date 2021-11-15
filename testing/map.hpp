@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/11/15 17:37:50 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/15 18:01:09 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ namespace ft
 			const_iterator			end() const { return (const_iterator(NULL, svr)); }
 			reverse_iterator		rbegin() { return reverse_iterator(reverse_iterator(root->getRightest(root), svr)); }
 			const_reverse_iterator	rbegin() const { return (const_reverse_iterator(reverse_iterator(root->getRightest(root), svr))); }
-			reverse_iterator		rend() { return reverse_iterator((NULL, svr)); }
+			reverse_iterator		rend() { return reverse_iterator(NULL, svr); }
 			const_reverse_iterator	rend() const { return (const_reverse_iterator(NULL, svr)); }
 
 			/**capacity**/
@@ -327,85 +327,85 @@ namespace ft
 			}
 	};
 
-// 	template< class Key, class T, class Compare, class Alloc>
-// 	bool	operator==(const map<Key, T, Compare, Alloc> &lhs, const map<Key,T,Compare,Alloc> &rhs)
-// 	{
-// 		if (lhs.size() != rhs.size())
-// 			return (false);
-// 		bool ret = (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()) == false) \
-// 		 && (ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()) == false);
-// 		return (ret);
-// 	}
+	// template< class Key, class T, class Compare, class Alloc>
+	// bool	operator==(const map<Key, T, Compare, Alloc> &lhs, const map<Key,T,Compare,Alloc> &rhs)
+	// {
+	// 	if (lhs.size() != rhs.size())
+	// 		return (false);
+	// 	bool ret = (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()) == false) \
+	// 	 && (ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()) == false);
+	// 	return (ret);
+	// }
 
-// 	template< class Key, class T, class Compare, class Alloc>
-// 	bool	operator!=(const map<Key, T, Compare, Alloc> &lhs, const map<Key,T,Compare,Alloc> &rhs)
-// 	{
-// 		if (lhs.size() != rhs.size())
-// 			return (true);
-// 		return (!operator==(lhs, rhs));
-// 	}
+	// template< class Key, class T, class Compare, class Alloc>
+	// bool	operator!=(const map<Key, T, Compare, Alloc> &lhs, const map<Key,T,Compare,Alloc> &rhs)
+	// {
+	// 	if (lhs.size() != rhs.size())
+	// 		return (true);
+	// 	return (!operator==(lhs, rhs));
+	// }
 
-// 	template< class Key, class T, class Compare, class Alloc>
-// 	bool	operator>(const map<Key, T, Compare, Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
-// 	{
-// 		typename map<Key, T, Compare, Alloc>::const_iterator first1 = lhs.begin();
-// 		typename map<Key, T, Compare, Alloc>::const_iterator last1 = lhs.end();
-// 		typename map<Key, T, Compare, Alloc>::const_iterator first2 = rhs.begin();
-// 		typename map<Key, T, Compare, Alloc>::const_iterator last2 = rhs.end();
-// 		while (first1 != last1 && first2 != last2)
-// 		{
-// 			if (*first1 != *first2)
-// 			{
-// 				if (*first1. > *first2)
-// 					return (true);
-// 				else if (*first1 < *first2)
-// 					return (false);
-// 			}
-// 			first1++;
-// 			first2++;
-// 		}
-// 		if (first1 != last1 && first2 == last2)
-// 				return (true);
-// 		else
-// 			return (false);
-// 	}
+	// template< class Key, class T, class Compare, class Alloc>
+	// bool	operator>(const map<Key, T, Compare, Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
+	// {
+	// 	typename map<Key, T, Compare, Alloc>::const_iterator first1 = lhs.begin();
+	// 	typename map<Key, T, Compare, Alloc>::const_iterator last1 = lhs.end();
+	// 	typename map<Key, T, Compare, Alloc>::const_iterator first2 = rhs.begin();
+	// 	typename map<Key, T, Compare, Alloc>::const_iterator last2 = rhs.end();
+	// 	while (first1 != last1 && first2 != last2)
+	// 	{
+	// 		if (*first1 != *first2)
+	// 		{
+	// 			if (*first1. > *first2)
+	// 				return (true);
+	// 			else if (*first1 < *first2)
+	// 				return (false);
+	// 		}
+	// 		first1++;
+	// 		first2++;
+	// 	}
+	// 	if (first1 != last1 && first2 == last2)
+	// 			return (true);
+	// 	else
+	// 		return (false);
+	// }
 
-// 	template< class Key, class T, class Compare, class Alloc>
-// 	bool	operator<(const map<Key, T, Compare, Alloc> &lhs, const map<Key,T,Compare,Alloc> &rhs)
-// 	{
-// 		typename map<Key, T, Compare, Alloc>::const_iterator first1 = lhs.begin();
-// 		typename map<Key, T, Compare, Alloc>::const_iterator last1 = lhs.end();
-// 		typename map<Key, T, Compare, Alloc>::const_iterator first2 = rhs.begin();
-// 		typename map<Key, T, Compare, Alloc>::const_iterator last2 = rhs.end();
-// 		while (first1 != last1 && first2 != last2)
-// 		{
-// 			if (*first1 != *first2)
-// 			{
-// 				if (*first1 < *first2)
-// 					return (true);
-// 				else if (*first1 > *first2)
-// 					return (false);
-// 			}
-// 			first1++;
-// 			first2++;
-// 		}
-// 		if (first1 == last1 && first2 != last2)
-// 				return (true);
-// 		else
-// 			return (false);
-// 	}
+	// template< class Key, class T, class Compare, class Alloc>
+	// bool	operator<(const map<Key, T, Compare, Alloc> &lhs, const map<Key,T,Compare,Alloc> &rhs)
+	// {
+	// 	typename map<Key, T, Compare, Alloc>::const_iterator first1 = lhs.begin();
+	// 	typename map<Key, T, Compare, Alloc>::const_iterator last1 = lhs.end();
+	// 	typename map<Key, T, Compare, Alloc>::const_iterator first2 = rhs.begin();
+	// 	typename map<Key, T, Compare, Alloc>::const_iterator last2 = rhs.end();
+	// 	while (first1 != last1 && first2 != last2)
+	// 	{
+	// 		if (*first1 != *first2)
+	// 		{
+	// 			if (*first1 < *first2)
+	// 				return (true);
+	// 			else if (*first1 > *first2)
+	// 				return (false);
+	// 		}
+	// 		first1++;
+	// 		first2++;
+	// 	}
+	// 	if (first1 == last1 && first2 != last2)
+	// 			return (true);
+	// 	else
+	// 		return (false);
+	// }
 
-// 	template< class Key, class T, class Compare, class Alloc>
-// 	bool	operator>=(const map<Key, T, Compare, Alloc> &lhs, const map<Key,T,Compare,Alloc> &rhs)
-// 	{
-// 		return (operator>(lhs, rhs) || operator==(lhs, rhs));
-// 	}
+	// template< class Key, class T, class Compare, class Alloc>
+	// bool	operator>=(const map<Key, T, Compare, Alloc> &lhs, const map<Key,T,Compare,Alloc> &rhs)
+	// {
+	// 	return (operator>(lhs, rhs) || operator==(lhs, rhs));
+	// }
 
-// 	template< class Key, class T, class Compare, class Alloc>
-// 	bool	operator<=(const map<Key, T, Compare, Alloc> &lhs, const map<Key,T,Compare,Alloc> &rhs)
-// 	{
-// 		return (operator<(lhs, rhs) || operator==(lhs, rhs));
-// 	}
-// }
+	// template< class Key, class T, class Compare, class Alloc>
+	// bool	operator<=(const map<Key, T, Compare, Alloc> &lhs, const map<Key,T,Compare,Alloc> &rhs)
+	// {
+	// 	return (operator<(lhs, rhs) || operator==(lhs, rhs));
+	// }
+}
 
 #endif
