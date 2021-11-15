@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/11/15 18:03:48 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/15 19:43:45 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ namespace ft
 			iterator				end() { return iterator(NULL, svr); }
 			const_iterator			end() const { return (const_iterator(NULL, svr)); }
 			reverse_iterator		rbegin() { return (reverse_iterator(root->getRightest(root), svr)); }
-			const_reverse_iterator	rbegin() const { return (reverse_iterator(root->getRightest(root), svr)); }
+			const_reverse_iterator	rbegin() const { return (const_reverse_iterator(root->getRightest(root), svr)); }
 			reverse_iterator		rend() { return reverse_iterator(NULL, svr); }
 			const_reverse_iterator	rend() const { return (const_reverse_iterator(NULL, svr)); }
 

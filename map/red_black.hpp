@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/15 14:25:49 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/15 20:19:49 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ namespace ft
 				if (cmp(root->ip.first, key)) // first < key
 				{
 					if (root->right == NULL)
-						return (root);
+						return (root); // (key : NULL, value : 마지막에 탐색된 value 값이 리턴되어야 한다.) = > segfault 문제
 					else
 						return (getLowerBound(root->right, key));
 				}
