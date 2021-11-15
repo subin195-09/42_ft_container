@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/13 16:18:52 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/15 14:25:49 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ namespace ft
 				else
 				{
 					if (root->left == NULL)
-						return (NULL);
+						return (root);
 					else
 						return (getLowerBound(root->left, key));
 				}
@@ -275,16 +275,16 @@ namespace ft
 
 	};
 
-	template <typename Key, typename T, class Compate = ft::less<Key> >
+	template <typename Key, typename T, class Compare = ft::less<Key> >
 	class saver
 	{
 		public:
-			node<Key, T>	*root;
+			node<Key, T, Compare>	*root;
 
-			saver(node<Key, T, Compate> *root = NULL) : root(root) {}
+			saver(node<Key, T, Compare> *_root = NULL) : root(_root) {}
 			~saver() {}
-			saver(const saver<Key, T, Compate> &other) : root(other.root) {}
-			saver	&operator=(const saver<Key, T, Compate> &other)
+			saver(const saver<Key, T, Compare> &other) : root(other.root) {}
+			saver	&operator=(const saver<Key, T, Compare> &other)
 			{
 				if (this != &other)
 					this->root = other.root;

@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/11/13 15:52:44 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/15 14:39:47 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,8 +147,8 @@ namespace ft
 				}
 				else
 				{
-					if ((ret = root->find(root, key)) != NULL)\
-						return (root->ip.second);
+					if ((ret = root->find(root, key)) != NULL)
+						return (ret->ip.second);
 					else
 					{
 						num_of_ele++;
@@ -286,7 +286,7 @@ namespace ft
 				return (1);
 			}
 
-			// lower_bount, upper_bound에 대해 좀 더 알아볼 것!
+			// lower_bound, upper_bound에 대해 좀 더 알아볼 것!
 			iterator		lower_bound(const key_type &key)
 			{
 				if (num_of_ele == 0)

@@ -13,7 +13,7 @@
 #endif
 
 #ifndef TEST_NS
-# define TEST_NS ft
+# define TEST_NS std
 #endif
 
 #ifndef TEST_TK

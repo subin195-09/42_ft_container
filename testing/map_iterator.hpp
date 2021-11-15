@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 20:03:33 by skim              #+#    #+#             */
-/*   Updated: 2021/11/13 16:01:01 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/15 13:29:45 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ namespace ft
 
 		public:
 			mapIterator() {}
-			mapIterator(node<Key, T, Compare> *now, saver<Key, T, Compare> *svr) : now(now), svr(svr) {}
+			mapIterator(node<Key, T, Compare> *now, saver<Key, T, Compare> *svr) : now(now), svr(svr){}
 			mapIterator(const mapIterator<Key, T, Compare> &origin) : now(origin.getNow()), svr(origin.getSV()) {}
 			~mapIterator() {}
 
