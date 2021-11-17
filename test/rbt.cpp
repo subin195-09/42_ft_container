@@ -24,6 +24,7 @@ struct node {
 };
 
 node	*root = NULL;
+node	*nil = new node();
 size_t	size = 0;
 
 void	rotate_left(node *target)
@@ -34,7 +35,7 @@ void	rotate_left(node *target)
 	// 새로 root가 될 node의 왼쪽 자식을 target의 오른쫀 자식으로 바꿈
 	target->right = newRoot->left;
 	// 리프노드가 아니라면 부모를 바꿔준다.
-	if (newRoot->left)
+	if (newRoot->left != nil)
 		newRoot->left->parent = target;
 	newRoot->parent = target->parent;
 
@@ -55,7 +56,7 @@ void	rotate_right(node *target)
 
 	newRoot = target->left;
 	target->left = newRoot->right;
-	if (newRoot->right)
+	if (newRoot->right != nil)
 		newRoot->right->parent = target;
 	newRoot->parent = target->parent;
 	if (target == root)
@@ -74,7 +75,7 @@ void	fix_up(node *target)
 	node	*grand = parent->parent;
 	node	*uncle = grand->left == parent ? grand->right : grand->left;
 
-	if (uncle && uncle->color == RED)
+	if (uncle != nil && uncle->color == RED)
 	{
 		parent->color = BLACK;
 		uncle->color = BLACK;
@@ -89,22 +90,22 @@ void	fix_up(node *target)
 			if (target == parent->right && parent == grand->left)
 			{
 				target->color = BLACK;
-				rotate_right(parent);
+				rotate_left(parent);
 			}
 			else
 				parent->color = BLACK;
-			rotate_left(grand);
+			rotate_right(grand);
 		}
 		else
 		{
 			if (target == parent->left && parent == grand->right)
 			{
 				target->color = BLACK;
-				rotate_left(parent);
+				rotate_right(parent);
 			}
 			else
 				parent->color = BLACK;
-			rotate_right(grand);
+			rotate_left(grand);
 		}
 		grand->color = RED;
 	}
@@ -114,8 +115,8 @@ void	insert_left(node *_root, node *newNode)
 {
 	_root->left = newNode;
 	newNode->parent = _root;
-	newNode->left = NULL;
-	newNode->right = NULL;
+	newNode->left = nil;
+	newNode->right = nil;
 	newNode->color = RED;
 	size++;
 	if (newNode->parent->color == RED)
@@ -126,8 +127,8 @@ void	insert_right(node *_root, node *newNode)
 {
 	_root->right = newNode;
 	newNode->parent = _root;
-	newNode->left = NULL;
-	newNode->right = NULL;
+	newNode->left = nil;
+	newNode->right = nil;
 	newNode->color = RED;
 	size++;
 	if (newNode->parent->color == RED)
@@ -141,23 +142,23 @@ void	insert(node *_root, node *newNode)
 	{
 		root = newNode;
 		newNode->color = BLACK;
-		newNode->parent = NULL;
-		newNode->left = NULL;
-		newNode->right = NULL;
+		newNode->parent = nil;
+		newNode->left = nil;
+		newNode->right = nil;
 		size++;
 	}
 	else
 	{
 		if (_root->value > newNode->value)
 		{
-			if (_root->left != NULL)
+			if (_root->left != nil)
 				insert(_root->left, newNode);
 			else
 				insert_left(_root, newNode);
 		}
 		else
 		{
-			if (_root->right != NULL)
+			if (_root->right != nil)
 				insert(_root->right, newNode);
 			else
 				insert_right(_root, newNode);
@@ -168,9 +169,32 @@ void	insert(node *_root, node *newNode)
 
 int		main(void)
 {
-	node *root = new node();
+	node *newNode = new node();
+	node *newNode2 = new node();
+	node *newNode3 = new node();
+	node *newNode4 = new node();
+	node *newNode5 = new node();
+	node *newNode6 = new node();
 
+	nil->parent = NULL;
+	nil->left = NULL;
+	nil->right = NULL;
+
+	newNode->value = 16;
+	newNode2->value = 15;
+	newNode3->value = 12;
+	newNode4->value = 13;
+	newNode5->value = 14;
+	newNode6->value = 11;
+	
 	// insert
+	insert(root, newNode);
+	insert(root, newNode2);
+	insert(root, newNode3);
+	insert(root, newNode4);
+	insert(root, newNode5);
+	insert(root, newNode6);
+
 
 	// delete
 }
