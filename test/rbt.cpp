@@ -87,6 +87,7 @@ void	fix_up(node *target)
 	{
 		if (parent == grand->left)
 		{
+			grand->color = RED;
 			if (target == parent->right && parent == grand->left)
 			{
 				target->color = BLACK;
@@ -98,6 +99,7 @@ void	fix_up(node *target)
 		}
 		else
 		{
+			grand->color = RED;
 			if (target == parent->left && parent == grand->right)
 			{
 				target->color = BLACK;
@@ -166,6 +168,71 @@ void	insert(node *_root, node *newNode)
 	}
 }
 
+#define C_RED  "\033[31m"
+#define C_NRML "\033[0m"
+
+
+void	node_print(node *target)
+{
+	if (target->color == RED)
+		std::cout << C_RED << target->value;
+	else
+		std::cout << C_NRML << target->value;
+}
+
+void	tab_print(int num)
+{
+	for (int i = 0; i < num; i++)
+		std::cout << '\t';
+}
+
+int		tree_left(node *target)
+{
+	int	i = 0;
+
+	while (target != nil)
+	{
+		i++;
+		target = target->left;
+	}
+	return (i);
+}
+
+void	tree_print(node *target)
+{
+	if (target == root)
+	{
+		tab_print(tree_left(target));
+		node_print(target);
+	}
+	std::cout << '\n';
+
+	if (target->left != nil)
+	{
+		tab_print(tree_left(target->left) );
+		std::cout << "  /";
+	}
+	if (target->right != nil)
+	{
+		tab_print(tree_left(target->right) + 1);
+		std::cout << '\\';
+	}
+	std::cout << '\n';
+	if (target->left != nil)
+	{
+		tab_print(tree_left(target->left));
+		node_print(target->left);
+	}
+	if (target->right != nil)
+	{
+		tab_print(tree_left(target->right) + 1);
+		node_print(target->right);
+	}
+	if (target->left != nil)
+		tree_print(target->left);
+	if (target->right != nil)
+		tree_print(target->right);
+}
 
 int		main(void)
 {
@@ -195,6 +262,6 @@ int		main(void)
 	insert(root, newNode5);
 	insert(root, newNode6);
 
-
+	tree_print(root);
 	// delete
 }
