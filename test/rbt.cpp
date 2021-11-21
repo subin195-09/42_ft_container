@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 15:38:24 by skim              #+#    #+#             */
-/*   Updated: 2021/11/16 20:42:16 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/21 21:43:37 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 #define RED		true
 #define BLACK	false
+#define C_RED	"\033[31m"
+#define C_NRML	"\033[0m"
 
 struct node {
 	node	*parent;
@@ -69,7 +71,7 @@ void	rotate_right(node *target)
 	newRoot->right = target;
 }
 
-void	fix_up(node *target)
+void	insert_fix_up(node *target)
 {
 	node	*parent = target->parent;
 	node	*grand = parent->parent;
@@ -81,7 +83,7 @@ void	fix_up(node *target)
 		uncle->color = BLACK;
 		grand->color = grand == root ? BLACK : RED;
 		if (grand->color == RED && grand->parent->color == RED)
-			fix_up(grand->parent);
+			insert_fix_up(grand->parent);
 	}
 	else
 	{
@@ -122,7 +124,7 @@ void	insert_left(node *_root, node *newNode)
 	newNode->color = RED;
 	size++;
 	if (newNode->parent->color == RED)
-		fix_up(newNode);
+		insert_fix_up(newNode);
 }
 
 void	insert_right(node *_root, node *newNode)
@@ -134,9 +136,8 @@ void	insert_right(node *_root, node *newNode)
 	newNode->color = RED;
 	size++;
 	if (newNode->parent->color == RED)
-		fix_up(newNode);
+		insert_fix_up(newNode);
 }
-
 
 void	insert(node *_root, node *newNode)
 {
@@ -168,9 +169,47 @@ void	insert(node *_root, node *newNode)
 	}
 }
 
-#define C_RED  "\033[31m"
-#define C_NRML "\033[0m"
+void	trans(node *target1, node *target2)
+{
+	std::cout << "target1 : " << target1->value << std::endl;
+	std::cout << "target2 : " << target2->value << std::endl;
+	target2->color = target1->color;
+	if (target1->parent != nil)
+	{
+		target2->parent = target1->parent;
+		if (target1->parent->left == target1)
+			target1->parent->left = target2;
+		else
+			target1->parent->right = target2;
+		if (target1->right != nil)
+		{
+			target1->right->parent = target2;
+			target2->right = target1->right;
+		}
+	}
+	else
+	{
+		root = target2;
+		target2 = nil;
+	}
+}
 
+void	erase(node *target)
+{
+	if (target->left == nil)
+	{
+		trans(target, target->right);
+		delete target;
+	}
+	else
+	{
+		node	*newNode = target->left;
+		while (newNode->right != nil)
+			newNode = newNode->right;
+		trans(target, newNode);
+		delete target;
+	}
+}
 
 void	node_print(node *target)
 {
@@ -253,7 +292,7 @@ int		main(void)
 	newNode4->value = 13;
 	newNode5->value = 14;
 	newNode6->value = 11;
-	
+
 	// insert
 	insert(root, newNode);
 	insert(root, newNode2);
@@ -263,5 +302,8 @@ int		main(void)
 	insert(root, newNode6);
 
 	tree_print(root);
+
 	// delete
+	erase(newNode4);
+	tree_print(root);
 }
