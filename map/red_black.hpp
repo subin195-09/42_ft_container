@@ -29,9 +29,10 @@ namespace ft
 			node	*left;
 			node	*right;
 			bool	color;
+			node	*nil;
 			Compare	cmp;
 
-			// priate functions (deleteNode에 필요, pearan ver)
+			// private functions (deleteNode에 필요, pearan ver)
 			void childChange(node *from, node *to)
 			{
 				if (left == from)
@@ -50,12 +51,62 @@ namespace ft
 					parent->childChange(this, left);
 			}
 
+			// setNil
+			void	setNil(void)
+			{
+				nil = new node<Key, T, Compare>;
+				nil->parent = NULL;
+				nil->left = NULL;
+				nil->right = NULL;
+				nil->color = BLACK;
+			}
+
+			// rotation
+			void	rotateLeft(node<Key, T, Compare> *target)
+			{
+				node<Key, T, Compare>	*newRoot;
+				node<Key, T, Compare>	*root = getRoot(target);
+
+				newRoot = target->right;
+				target->right = newRoot->left;
+				if (newRoot->left != nil)
+					newRoot->left->parent = target;
+				newRoot->parent = target->parent;
+				if (target == root)
+					root = newRoot;
+				if (target == target->parent->left)
+					target->parent->left = newRoot;
+					target->parent->right = newRoot;
+				target->parent = newRoot;
+				newRoot->left = target;
+			}
+
+			void	rotateRight(node<Key, T, Compare> *target)
+			{
+				node<Key, T, Compare>	*newRoot;
+				node<Key, T, Compare>	*root = getRoot(target);
+
+				newRoot = target->left;
+				target->left = newRoot->right;
+				if (newRoot->right != nil)
+					newRoot->right->parent = target;
+				newRoot->parent = target->parent;
+				if (target == root)
+					root = newRoot;
+				if (target == target->parent->left)
+					target->parent->left = newRoot;
+				else
+					target->parent->right = newRoot;
+				target->parent = newRoot;
+				newRoot->right = target;
+			}
+
 		public:
 			pair<const Key, T>	ip;
 
-			node() : parent(NULL), left(NULL), right(NULL) {}
-			node(Key first, T second = T()) :  parent(NULL), left(NULL), right(NULL) ,ip(first, second) {}
-			node(const pair<Key, T> &p) : parent(NULL), left(NULL), right(NULL) ,ip(p) {}
+			node() : parent(NULL), left(NULL), right(NULL) { setNil(); }
+			node(Key first, T second = T()) :  parent(NULL), left(NULL), right(NULL) ,ip(first, second) { setNil(); }
+			node(const pair<Key, T> &p) : parent(NULL), left(NULL), right(NULL) ,ip(p) { setNil(); }
 
 			//deep copy 추후 좀 더 연구해 볼 것
 			node(const node<Key, T, Compare> &origin, node<Key, T, Compare> *parent = NULL) : parent(parent), left(NULL), right(NULL), ip(origin.ip)
@@ -105,11 +156,58 @@ namespace ft
 				}
 			}
 
+			void					insertFixup(node<Key, T, Compare> *target)
+			{
+				node<Key, T, Compare>	*_parent = target->parent;
+				node<Key, T, Compare>	*_grand = _parent->parent;
+				node<Key, T, Compare>	*_uncle = _grand->left == _parent ? _grand->right : _grand->left;
+				node<Key, T, Compare>	*root = getRoot(target);
+
+
+				if (_uncle != nil && _uncle->color == RED)
+				{
+					_parent->color = BLACK;
+					_uncle->color = BLACK;
+					_grand->color = _grand == root ? BLACK : RED;
+					if (_grand->color == RED && _grand->parent->color == RED)
+						insertFixup(_grand);
+				}
+				else
+				{
+					if (_parent == _grand->left)
+					{
+						_grand->color = RED;
+						if (target == _parent->right && _parent == _grand->left)
+						{
+							target->color = BLACK;
+							rotateLeft(_parent);
+						}
+						else
+							_parent->color = BLACK;
+						rotateRight(_grand);
+					}
+					else
+					{
+						_grand->color = RED;
+						if (target == _parent->left && _parent == _grand->right)
+						{
+							target->color = BLACK;
+							rotateRight(parent);
+						}
+						else
+							_parent->color = BLACK;
+						rotateLeft(_grand);
+					}
+					_grand->color = RED;
+				}
+			}
+
 			// mergeInsert (insert) : value를 갱신하거나, key를 추가함
 			node<Key, T, Compare>	*mergeInsert(node<Key, T, Compare> *root, const Key &k, const T &v = T())
 			{
 				node<Key, T, Compare>	*child;
 
+				std::cout << "key: " << k << ", value: " << v << std::endl;
 				if (cmp(root->ip.first, k) == false && cmp(k, root->ip.first) == false)
 				{
 					root->ip.second = v;
@@ -123,6 +221,9 @@ namespace ft
 						child = new node<Key, T, Compare>(k, v);
 						root->right = child;
 						child->parent = root;
+						child->left = nil;
+						child->right = nil;
+						insertFixup(child);
 						return (child);
 					}
 					return (mergeInsert(root->right, k, v));
@@ -135,6 +236,9 @@ namespace ft
 						child = new node<Key, T, Compare>(k, v);
 						root->left = child;
 						child->parent = root;
+						child->left = nil;
+						child->right = nil;
+						insertFixup(child);
 						return (child);
 					}
 					return (mergeInsert(root->left, k, v));
