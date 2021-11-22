@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 15:38:24 by skim              #+#    #+#             */
-/*   Updated: 2021/11/21 21:43:37 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/22 14:47:04 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	insert_fix_up(node *target)
 		uncle->color = BLACK;
 		grand->color = grand == root ? BLACK : RED;
 		if (grand->color == RED && grand->parent->color == RED)
-			insert_fix_up(grand->parent);
+			insert_fix_up(grand);
 	}
 	else
 	{
@@ -171,8 +171,6 @@ void	insert(node *_root, node *newNode)
 
 void	trans(node *target1, node *target2)
 {
-	std::cout << "target1 : " << target1->value << std::endl;
-	std::cout << "target2 : " << target2->value << std::endl;
 	target2->color = target1->color;
 	if (target1->parent != nil)
 	{
@@ -194,116 +192,212 @@ void	trans(node *target1, node *target2)
 	}
 }
 
+void	erase_fix_up(node *target)
+{
+	node	*parent = target->parent;
+	node	*sibling = parent->left == target ? parent->right : parent->left;
+	node	*sibling_left = sibling->left;
+	node	*sibling_right = sibling->right;
+
+	// case 4 (all black)
+	if (!(parent->color || sibling->color || sibling->left->color || sibling->right->color))
+		sibling->color = RED;
+	// case 1
+	else if (parent->color == RED && sibling->color == BLACK && sibling_left->color == BLACK && sibling_right->color == BLACK)
+	{
+		parent->color = BLACK;
+		sibling->color = RED;
+	}
+	// case 2, case 3
+	else if (sibling->color == BLACK)
+	{
+		if (parent->left == target)
+		{
+			if (sibling_right->color == RED)
+			{
+				sibling->color = parent->color;
+				parent->color = BLACK;
+				sibling_right->color = BLACK;
+				rotate_left(parent);
+			}
+			else
+			{
+				if (sibling_left->color == RED)
+				{
+					sibling_left->color = BLACK;
+					sibling->color = RED;
+					rotate_right(sibling);
+				}
+			}
+		}
+		else if (parent->right == target)
+		{
+			if (sibling_left->color == RED)
+			{
+				sibling->color = parent->color;
+				parent->color = BLACK;
+				sibling_left->color = BLACK;
+				rotate_right(parent);
+			}
+			else
+			{
+				if (sibling_right->color == RED)
+				{
+					sibling_right->color = BLACK;
+					sibling->color = RED;
+					rotate_left(sibling);
+				}
+			}
+		}
+	}
+	// case 5
+	else if (sibling->color == RED && parent->color == BLACK && sibling_left->color == BLACK && sibling_right->color == BLACK)
+	{
+		parent->color = RED;
+		sibling->color = BLACK;
+		if (parent->left == target)
+			rotate_right(parent);
+		else
+			rotate_left(parent);
+	}
+}
+
 void	erase(node *target)
 {
+	node	*newNode;
+
 	if (target->left == nil)
 	{
+		newNode = target->right;
 		trans(target, target->right);
 		delete target;
+		size--;
 	}
 	else
 	{
-		node	*newNode = target->left;
+		newNode = target->left;
 		while (newNode->right != nil)
 			newNode = newNode->right;
+		if (newNode->color == BLACK && newNode->left->color == RED)
+			newNode->left->color = BLACK;
 		trans(target, newNode);
 		delete target;
+		size--;
 	}
+	if (target->color == BLACK && newNode->color == BLACK)
+		erase_fix_up(newNode);
 }
 
-void	node_print(node *target)
-{
-	if (target->color == RED)
-		std::cout << C_RED << target->value;
-	else
-		std::cout << C_NRML << target->value;
-}
+// void	node_print(node *target)
+// {
+// 	if (target->color == RED)
+// 		std::cout << C_RED << target->value;
+// 	else
+// 		std::cout << C_NRML << target->value;
+// }
 
-void	tab_print(int num)
-{
-	for (int i = 0; i < num; i++)
-		std::cout << '\t';
-}
+// void	tab_print(int num)
+// {
+// 	for (int i = 0; i < num; i++)
+// 		std::cout << '\t';
+// }
 
-int		tree_left(node *target)
-{
-	int	i = 0;
+// int		tree_left(node *target)
+// {
+// 	int	i = 0;
 
-	while (target != nil)
-	{
-		i++;
-		target = target->left;
-	}
-	return (i);
-}
+// 	while (target != nil)
+// 	{
+// 		i++;
+// 		target = target->left;
+// 	}
+// 	return (i);
+// }
 
-void	tree_print(node *target)
-{
-	if (target == root)
-	{
-		tab_print(tree_left(target));
-		node_print(target);
-	}
-	std::cout << '\n';
+// void	tree_print(node *target)
+// {
+// 	if (target == root)
+// 	{
+// 		tab_print(tree_left(target));
+// 		node_print(target);
+// 	}
+// 	std::cout << '\n';
 
-	if (target->left != nil)
-	{
-		tab_print(tree_left(target->left) );
-		std::cout << "  /";
-	}
-	if (target->right != nil)
-	{
-		tab_print(tree_left(target->right) + 1);
-		std::cout << '\\';
-	}
-	std::cout << '\n';
-	if (target->left != nil)
-	{
-		tab_print(tree_left(target->left));
-		node_print(target->left);
-	}
-	if (target->right != nil)
-	{
-		tab_print(tree_left(target->right) + 1);
-		node_print(target->right);
-	}
-	if (target->left != nil)
-		tree_print(target->left);
-	if (target->right != nil)
-		tree_print(target->right);
-}
+// 	if (target->left != nil)
+// 	{
+// 		tab_print(tree_left(target->left) );
+// 		std::cout << "  /";
+// 	}
+// 	if (target->right != nil)
+// 	{
+// 		tab_print(tree_left(target->right) + 1);
+// 		std::cout << '\\';
+// 	}
+// 	std::cout << '\n';
+// 	if (target->left != nil)
+// 	{
+// 		tab_print(tree_left(target->left));
+// 		node_print(target->left);
+// 	}
+// 	if (target->right != nil)
+// 	{
+// 		tab_print(tree_left(target->right) + 1);
+// 		node_print(target->right);
+// 	}
+// 	if (target->left != nil)
+// 		tree_print(target->left);
+// 	if (target->right != nil)
+// 		tree_print(target->right);
+// }
+
+void	tree_print(node *_root, std::string indent, bool last)
+   {
+       // print the tree structure on the screen
+       if (_root != nil)
+       {
+           std::cout << indent;
+           if (last)
+           {
+               std::cout << "R----";
+               indent += "     ";
+           }
+           else
+           {
+               std::cout << "L----";
+               indent += "|    ";
+           }
+           std::string sColor = (_root->color == RED) ? "RED" : "BLACK";
+           std::cout << _root->value << "(" << sColor << ")" << std::endl;
+           tree_print(_root->left, indent, false);
+           tree_print(_root->right, indent, true);
+       }
+   }
+
 
 int		main(void)
 {
-	node *newNode = new node();
-	node *newNode2 = new node();
-	node *newNode3 = new node();
-	node *newNode4 = new node();
-	node *newNode5 = new node();
-	node *newNode6 = new node();
+	node *newNode[100];
 
 	nil->parent = NULL;
 	nil->left = NULL;
 	nil->right = NULL;
+	nil->color = BLACK;
 
-	newNode->value = 16;
-	newNode2->value = 15;
-	newNode3->value = 12;
-	newNode4->value = 13;
-	newNode5->value = 14;
-	newNode6->value = 11;
-
-	// insert
-	insert(root, newNode);
-	insert(root, newNode2);
-	insert(root, newNode3);
-	insert(root, newNode4);
-	insert(root, newNode5);
-	insert(root, newNode6);
-
-	tree_print(root);
+	for (int i = 0; i < 15; i++)
+	{
+		newNode[i] = new node();
+		newNode[i]->value = i;
+		insert(root, newNode[i]);
+	}
+	tree_print(root, " ", true);
 
 	// delete
-	erase(newNode4);
-	tree_print(root);
+	// for (int i = 5; i < 10; i++)
+	// {
+	// 	erase(newNode[i]);
+	// 	tree_print(root, " ", true);
+	// }
+	std::cout << "deletion : " << newNode[6]->value << std::endl;
+	erase(newNode[6]);
+	tree_print(root, " ", true);
 }
