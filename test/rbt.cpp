@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 15:38:24 by skim              #+#    #+#             */
-/*   Updated: 2021/11/22 14:47:04 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/22 17:53:43 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,8 +171,6 @@ void	insert(node *_root, node *newNode)
 
 void	trans(node *target1, node *target2)
 {
-	std::cout << "target1 : " << target1->value << std::endl;
-	std::cout << "target2 : " << target2->value << std::endl;
 	target2->color = target1->color;
 	if (target1->parent != nil)
 	{
@@ -194,20 +192,13 @@ void	trans(node *target1, node *target2)
 	}
 }
 
-void	erase_fix_up(node *target)
+void	erase_fix_up(node *target, node *parent)
 {
-	std::cout << "fix_up : " << target->value << std::endl;
-	node	*parent = target->parent;
-	std::cout << parent->value << std::endl;
 	node	*sibling = parent->left == target ? parent->right : parent->left;
-	std::cout << "fix_up : " << target->value << std::endl;
 	node	*sibling_left = sibling->left;
-	std::cout << "fix_up : " << target->value << std::endl;
 	node	*sibling_right = sibling->right;
-	std::cout << "fix_up : " << target->value << std::endl;
 
 
-	std::cout << "fix_up : " << target->value << std::endl;
 	if (target == root || target->color != BLACK)
 		return ;
 	// case 1
@@ -262,7 +253,9 @@ void	erase_fix_up(node *target)
 	else if (!(parent->color || sibling->color || sibling->left->color || sibling->right->color))
 	{
 		sibling->color = RED;
-		erase_fix_up(parent);
+		std::cout << "case 4" << std::endl;
+		std::cout << parent->parent->value << std::endl;
+		erase_fix_up(parent, parent->parent);
 	}
 	// case 5
 	else if (sibling->color == RED && parent->color == BLACK && sibling_left->color == BLACK && sibling_right->color == BLACK)
@@ -273,21 +266,18 @@ void	erase_fix_up(node *target)
 			rotate_right(parent);
 		else
 			rotate_left(parent);
-		erase_fix_up(parent);
+		erase_fix_up(parent, parent->parent);
 	}
 }
 
 void	erase(node *target)
 {
-	bool	target_color = target->color;
 	node	*newNode;
-	node	*successor;
 
 	if (target->left == nil)
 	{
 		newNode = target->right;
 		trans(target, target->right);
-		successor = newNode;
 		delete target;
 		size--;
 	}
@@ -299,12 +289,11 @@ void	erase(node *target)
 		if (newNode->color == BLACK && newNode->left->color == RED)
 			newNode->left->color = BLACK;
 		trans(target, newNode);
-		successor = newNode->left;
 		delete target;
 		size--;
 	}
-	if (target_color == BLACK && newNode->color == BLACK)
-		erase_fix_up(successor);
+	if (newNode->color == BLACK && newNode->left->color == BLACK)
+		erase_fix_up(newNode->left, newNode);
 }
 
 // void	node_print(node *target)
