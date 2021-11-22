@@ -171,6 +171,8 @@ void	insert(node *_root, node *newNode)
 
 void	trans(node *target1, node *target2)
 {
+	std::cout << "target1 : " << target1->value << std::endl;
+	std::cout << "target2 : " << target2->value << std::endl;
 	target2->color = target1->color;
 	if (target1->parent != nil)
 	{
@@ -194,22 +196,28 @@ void	trans(node *target1, node *target2)
 
 void	erase_fix_up(node *target)
 {
+	std::cout << "fix_up : " << target->value << std::endl;
 	node	*parent = target->parent;
+	std::cout << parent->value << std::endl;
 	node	*sibling = parent->left == target ? parent->right : parent->left;
+	std::cout << "fix_up : " << target->value << std::endl;
 	node	*sibling_left = sibling->left;
+	std::cout << "fix_up : " << target->value << std::endl;
 	node	*sibling_right = sibling->right;
+	std::cout << "fix_up : " << target->value << std::endl;
 
-	// case 4 (all black)
-	if (!(parent->color || sibling->color || sibling->left->color || sibling->right->color))
-		sibling->color = RED;
+
+	std::cout << "fix_up : " << target->value << std::endl;
+	if (target == root || target->color != BLACK)
+		return ;
 	// case 1
-	else if (parent->color == RED && sibling->color == BLACK && sibling_left->color == BLACK && sibling_right->color == BLACK)
+	if (parent->color == RED && sibling->color == BLACK && sibling_left->color == BLACK && sibling_right->color == BLACK)
 	{
 		parent->color = BLACK;
 		sibling->color = RED;
 	}
 	// case 2, case 3
-	else if (sibling->color == BLACK)
+	else if (sibling->color == BLACK && (sibling_right->color == RED || sibling_left->color == RED))
 	{
 		if (parent->left == target)
 		{
@@ -250,6 +258,12 @@ void	erase_fix_up(node *target)
 			}
 		}
 	}
+	// case 4 (all black)
+	else if (!(parent->color || sibling->color || sibling->left->color || sibling->right->color))
+	{
+		sibling->color = RED;
+		erase_fix_up(parent);
+	}
 	// case 5
 	else if (sibling->color == RED && parent->color == BLACK && sibling_left->color == BLACK && sibling_right->color == BLACK)
 	{
@@ -259,17 +273,21 @@ void	erase_fix_up(node *target)
 			rotate_right(parent);
 		else
 			rotate_left(parent);
+		erase_fix_up(parent);
 	}
 }
 
 void	erase(node *target)
 {
+	bool	target_color = target->color;
 	node	*newNode;
+	node	*successor;
 
 	if (target->left == nil)
 	{
 		newNode = target->right;
 		trans(target, target->right);
+		successor = newNode;
 		delete target;
 		size--;
 	}
@@ -281,11 +299,12 @@ void	erase(node *target)
 		if (newNode->color == BLACK && newNode->left->color == RED)
 			newNode->left->color = BLACK;
 		trans(target, newNode);
+		successor = newNode->left;
 		delete target;
 		size--;
 	}
-	if (target->color == BLACK && newNode->color == BLACK)
-		erase_fix_up(newNode);
+	if (target_color == BLACK && newNode->color == BLACK)
+		erase_fix_up(successor);
 }
 
 // void	node_print(node *target)
@@ -392,12 +411,13 @@ int		main(void)
 	tree_print(root, " ", true);
 
 	// delete
-	// for (int i = 5; i < 10; i++)
-	// {
-	// 	erase(newNode[i]);
-	// 	tree_print(root, " ", true);
-	// }
-	std::cout << "deletion : " << newNode[6]->value << std::endl;
-	erase(newNode[6]);
-	tree_print(root, " ", true);
+	for (int i = 5; i < 10; i++)
+	{
+		std::cout << "deletion : " << newNode[i]->value << std::endl;
+		erase(newNode[i]);
+		tree_print(root, " ", true);
+	}
+	// std::cout << "deletion : " << newNode[6]->value << std::endl;
+	// erase(newNode[6]);
+	// tree_print(root, " ", true);
 }
