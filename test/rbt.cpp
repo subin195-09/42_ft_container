@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 15:38:24 by skim              #+#    #+#             */
-/*   Updated: 2021/11/22 17:53:43 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/22 19:29:57 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,20 +192,18 @@ void	trans(node *target1, node *target2)
 	}
 }
 
-void	erase_fix_up(node *target, node *parent)
+bool	erase_fix_up_re(node *target, node *parent)
 {
 	node	*sibling = parent->left == target ? parent->right : parent->left;
 	node	*sibling_left = sibling->left;
 	node	*sibling_right = sibling->right;
 
-
-	if (target == root || target->color != BLACK)
-		return ;
 	// case 1
 	if (parent->color == RED && sibling->color == BLACK && sibling_left->color == BLACK && sibling_right->color == BLACK)
 	{
 		parent->color = BLACK;
 		sibling->color = RED;
+		return (true);
 	}
 	// case 2, case 3
 	else if (sibling->color == BLACK && (sibling_right->color == RED || sibling_left->color == RED))
@@ -228,6 +226,7 @@ void	erase_fix_up(node *target, node *parent)
 					rotate_right(sibling);
 				}
 			}
+			return (true);
 		}
 		else if (parent->right == target)
 		{
@@ -247,15 +246,29 @@ void	erase_fix_up(node *target, node *parent)
 					rotate_left(sibling);
 				}
 			}
+			return (true);
 		}
 	}
+	return (false);
+}
+
+void	erase_fix_up(node *target, node *parent)
+{
+	std::cout << target->value << std::endl;
+	std::cout << parent->value << std::endl;
+	node	*sibling = parent->left == target ? parent->right : parent->left;
+	node	*sibling_left = sibling->left;
+	node	*sibling_right = sibling->right;
+
+	if (erase_fix_up_re(target, parent))
+		return ;
 	// case 4 (all black)
 	else if (!(parent->color || sibling->color || sibling->left->color || sibling->right->color))
 	{
 		sibling->color = RED;
 		std::cout << "case 4" << std::endl;
 		std::cout << parent->parent->value << std::endl;
-		erase_fix_up(parent, parent->parent);
+		erase_fix_up_re(parent, parent->parent);
 	}
 	// case 5
 	else if (sibling->color == RED && parent->color == BLACK && sibling_left->color == BLACK && sibling_right->color == BLACK)
@@ -263,10 +276,10 @@ void	erase_fix_up(node *target, node *parent)
 		parent->color = RED;
 		sibling->color = BLACK;
 		if (parent->left == target)
-			rotate_right(parent);
-		else
 			rotate_left(parent);
-		erase_fix_up(parent, parent->parent);
+		else
+			rotate_right(parent);
+		erase_fix_up_re(target, parent);
 	}
 }
 
