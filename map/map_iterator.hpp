@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 20:03:33 by skim              #+#    #+#             */
-/*   Updated: 2021/11/24 18:44:46 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/25 01:27:55 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -366,13 +366,13 @@ namespace ft
 
 			mapReverseConstIterator<Key, T, Compare>	&operator++(void)
 			{
-				now = getNex();
+				now = getNext();
 				return (*this);
 			}
 			mapReverseConstIterator<Key, T, Compare>	operator++(int)
 			{
 				mapReverseConstIterator<Key, T, Compare> tmp(*this);
-				now = getNex();
+				now = getNext();
 				return (tmp);
 			}
 			mapReverseConstIterator<Key, T, Compare>	&operator--(void)
@@ -405,14 +405,14 @@ namespace ft
 					parent = parent->getParent();
 				return (parent);
 			}
-			node<Key, T, Compare>	*getNex(void) const
+			node<Key, T, Compare>	*getNext(void) const
 			{
 				if (now == NULL)
 					return (now->getRightest(svr->root));
 				if (now->getLeft() != NULL)
 					return (now->getRightest(now->getLeft()));
 				node<Key, T, Compare> *parent = now->getParent();
-				while (parent != NULL && cmp(parent->ip.first, now->ip.first))
+				while (parent != NULL && cmp(now->ip.first, parent->ip.first))
 					parent = parent->getParent();
 				return (parent);
 			}

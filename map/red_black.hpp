@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/24 21:10:19 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/25 01:32:35 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ namespace ft
 			pair<const Key, T>	ip;
 
 			node() : parent(NULL), left(NULL), right(NULL), color(BLACK) {}
-			node(Key first, T second = T()) :  parent(NULL), left(NULL), right(NULL) ,ip(first, second), color(BLACK) {}
+			node(Key first, T second = T()) :  parent(NULL), left(NULL), right(NULL) , color(BLACK),ip(first, second) {}
 			node(const pair<Key, T> &p) : parent(NULL), left(NULL), right(NULL) ,ip(p), color(BLACK) {}
 
 			//deep copy 추후 좀 더 연구해 볼 것
@@ -288,7 +288,7 @@ namespace ft
 				if (cmp(root->ip.first, key)) // first < key
 				{
 					if (root->right == NULL)
-						return (root); // (key : NULL, value : 마지막에 탐색된 value 값이 리턴되어야 한다.) = > segfault 문제
+						return (NULL);
 					else
 						return (getLowerBound(root->right, key));
 				}
