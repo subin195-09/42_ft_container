@@ -93,6 +93,7 @@ namespace ft
 			// red_black tree를 구성 후 좀 더 연구해볼 것
 			node<Key, T, Compare>	*getNow(void) const { return (now); }
 			saver<Key, T, Compare> 	*getSV(void) const { return (svr); }
+
 			node<Key, T, Compare>	*getPrev(void) const
 			{
 				if (now == NULL)
@@ -104,6 +105,7 @@ namespace ft
 					parent = parent->getParent();
 				return (parent);
 			}
+
 			node<Key, T, Compare>	*getNext(void) const
 			{
 				if (now == NULL)
@@ -199,6 +201,7 @@ namespace ft
 			}
 			node<Key, T, Compare>	*getNext(void) const
 			{
+				std::cout << "getNext: (" << now->ip.first << ", " << now->ip.second << ")" << std::endl;
 				if (now == NULL)
 					return (now->getLeftest(svr->root));
 				if (now->getRight() != NULL)

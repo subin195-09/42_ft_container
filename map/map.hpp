@@ -151,7 +151,9 @@ namespace ft
 					else
 					{
 						num_of_ele++;
-						return (root->mergeInsert(root, key)->ip.second);
+						mapped_type &ret = root->mergeInsert(root, key)->ip.second;
+						setSV();
+						return (ret);
 					}
 				}
 			}
@@ -178,6 +180,7 @@ namespace ft
 					{
 						num_of_ele++;
 						ret = root->mergeInsert(root, x.first, x.second);
+						setSV();
 						return (pair<iterator, bool>(iterator(ret, svr), true));
 					}
 				}

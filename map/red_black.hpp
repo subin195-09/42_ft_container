@@ -69,14 +69,18 @@ namespace ft
 
 				newRoot = target->right;
 				target->right = newRoot->left;
-				if (newRoot->left != nil)
+				if (newRoot->left != NULL)
 					newRoot->left->parent = target;
 				newRoot->parent = target->parent;
 				if (target == root)
 					root = newRoot;
-				if (target == target->parent->left)
-					target->parent->left = newRoot;
-					target->parent->right = newRoot;
+				if (target->parent)
+				{
+					if (target == target->parent->left)
+						target->parent->left = newRoot;
+					else	
+						target->parent->right = newRoot;
+				}
 				target->parent = newRoot;
 				newRoot->left = target;
 			}
@@ -88,15 +92,18 @@ namespace ft
 
 				newRoot = target->left;
 				target->left = newRoot->right;
-				if (newRoot->right != nil)
+				if (newRoot->right != NULL)
 					newRoot->right->parent = target;
 				newRoot->parent = target->parent;
 				if (target == root)
 					root = newRoot;
-				if (target == target->parent->left)
-					target->parent->left = newRoot;
-				else
-					target->parent->right = newRoot;
+				if (target->parent)
+				{
+					if (target == target->parent->left)
+						target->parent->left = newRoot;
+					else
+						target->parent->right = newRoot;
+				}
 				target->parent = newRoot;
 				newRoot->right = target;
 			}
@@ -104,9 +111,9 @@ namespace ft
 		public:
 			pair<const Key, T>	ip;
 
-			node() : parent(NULL), left(NULL), right(NULL) { setNil(); }
-			node(Key first, T second = T()) :  parent(NULL), left(NULL), right(NULL) ,ip(first, second) { setNil(); }
-			node(const pair<Key, T> &p) : parent(NULL), left(NULL), right(NULL) ,ip(p) { setNil(); }
+			node() : parent(NULL), left(NULL), right(NULL), color(BLACK) {}
+			node(Key first, T second = T()) :  parent(NULL), left(NULL), right(NULL) ,ip(first, second), color(BLACK) {}
+			node(const pair<Key, T> &p) : parent(NULL), left(NULL), right(NULL) ,ip(p), color(BLACK) {}
 
 			//deep copy 추후 좀 더 연구해 볼 것
 			node(const node<Key, T, Compare> &origin, node<Key, T, Compare> *parent = NULL) : parent(parent), left(NULL), right(NULL), ip(origin.ip)
@@ -158,13 +165,15 @@ namespace ft
 
 			void					insertFixup(node<Key, T, Compare> *target)
 			{
+				if (!(target->color == RED && target->parent->color == RED))
+					return ;
 				node<Key, T, Compare>	*_parent = target->parent;
 				node<Key, T, Compare>	*_grand = _parent->parent;
 				node<Key, T, Compare>	*_uncle = _grand->left == _parent ? _grand->right : _grand->left;
 				node<Key, T, Compare>	*root = getRoot(target);
 
 
-				if (_uncle != nil && _uncle->color == RED)
+				if (_uncle != NULL && _uncle->color == RED)
 				{
 					_parent->color = BLACK;
 					_uncle->color = BLACK;
@@ -207,7 +216,8 @@ namespace ft
 			{
 				node<Key, T, Compare>	*child;
 
-				std::cout << "key: " << k << ", value: " << v << std::endl;
+				if (!nil)
+					setNil();
 				if (cmp(root->ip.first, k) == false && cmp(k, root->ip.first) == false)
 				{
 					root->ip.second = v;
@@ -215,14 +225,14 @@ namespace ft
 				}
 				if (cmp(root->ip.first, k))
 				{
-					// 새로운 key 추가 (red_black tree 버전으로 수정하여야 함)
 					if (root->right == NULL)
 					{
 						child = new node<Key, T, Compare>(k, v);
 						root->right = child;
 						child->parent = root;
-						child->left = nil;
-						child->right = nil;
+						child->left = NULL;
+						child->right = NULL;
+						child->color = RED;
 						insertFixup(child);
 						return (child);
 					}
@@ -230,14 +240,14 @@ namespace ft
 				}
 				else
 				{
-					// 새로운 key 추가
 					if (root->left == NULL)
 					{
 						child = new node<Key, T, Compare>(k, v);
 						root->left = child;
 						child->parent = root;
-						child->left = nil;
-						child->right = nil;
+						child->left = NULL;
+						child->right = NULL;
+						child->color = RED;
 						insertFixup(child);
 						return (child);
 					}
