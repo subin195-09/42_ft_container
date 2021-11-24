@@ -34,5 +34,6 @@ int     main(void)
 	m['d']=80;
 	m['e']=100;
 
+	m.nodePrint();
 	printSize(m);
 }

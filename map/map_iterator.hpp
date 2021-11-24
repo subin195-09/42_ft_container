@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 20:03:33 by skim              #+#    #+#             */
-/*   Updated: 2021/11/15 19:46:39 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/24 18:44:46 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,6 @@ namespace ft
 			}
 			node<Key, T, Compare>	*getNext(void) const
 			{
-				std::cout << "getNext: (" << now->ip.first << ", " << now->ip.second << ")" << std::endl;
 				if (now == NULL)
 					return (now->getLeftest(svr->root));
 				if (now->getRight() != NULL)

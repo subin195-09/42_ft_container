@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/15 20:19:49 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/24 18:45:53 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ namespace ft
 				{
 					if (target == target->parent->left)
 						target->parent->left = newRoot;
-					else	
+					else
 						target->parent->right = newRoot;
 				}
 				target->parent = newRoot;
@@ -386,6 +386,29 @@ namespace ft
 			node<Key, T, Compare>	*getParent() { return (this->parent); }
 			node<Key, T, Compare>	*getLeft() { return (this->left); }
 			node<Key, T, Compare>	*getRight() { return (this->right); }
+
+			void	tree_print(node *_root, std::string indent, bool last)
+			{
+				// print the tree structure on the screen
+				if (_root != NULL)
+				{
+					std::cout << indent;
+					if (last)
+					{
+						std::cout << "R----";
+						indent += "     ";
+					}
+					else
+					{
+						std::cout << "L----";
+						indent += "|    ";
+					}
+					std::string sColor = (_root->color == RED) ? "RED" : "BLACK";
+					std::cout << _root->ip.first << "(" << sColor << ")" << std::endl;
+					tree_print(_root->left, indent, false);
+					tree_print(_root->right, indent, true);
+				}
+			}
 
 	};
 

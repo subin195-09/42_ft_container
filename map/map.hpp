@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/11/15 19:43:45 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/24 18:46:57 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,7 @@ namespace ft
 					{
 						num_of_ele++;
 						mapped_type &ret = root->mergeInsert(root, key)->ip.second;
+						root = root->getRoot(root);
 						setSV();
 						return (ret);
 					}
@@ -180,6 +181,7 @@ namespace ft
 					{
 						num_of_ele++;
 						ret = root->mergeInsert(root, x.first, x.second);
+						root = root->getRoot(root);
 						setSV();
 						return (pair<iterator, bool>(iterator(ret, svr), true));
 					}
@@ -327,6 +329,11 @@ namespace ft
 			pair<const_iterator, const_iterator>	equal_range(const key_type &key) const
 			{
 				return (pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key)));
+			}
+
+			void	nodePrint(void)
+			{
+				root->tree_print(root, "", true);
 			}
 	};
 
