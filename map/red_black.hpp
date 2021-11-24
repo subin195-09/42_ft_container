@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/24 18:45:53 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/24 21:10:19 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,7 +262,11 @@ namespace ft
 				if (!cmp(key, root->ip.first)) // first <= key
 				{
 					if (root->right == NULL)
-						return (NULL);
+					{
+						if (root->parent->ip.first < root->ip.first)
+							return (NULL);
+						return (root->parent);
+					}
 					else
 						return (getUpperBound(root->right, key));
 				}
