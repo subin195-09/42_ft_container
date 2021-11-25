@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 15:38:24 by skim              #+#    #+#             */
-/*   Updated: 2021/11/22 19:29:57 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/25 19:58:14 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,13 @@ struct node {
 node	*root = NULL;
 node	*nil = new node();
 size_t	size = 0;
+
+void	setNil(node *nilParent)
+{
+	nil->parent = nilParent;
+}
+
+void	tree_print(node *_root, std::string indent, bool last);
 
 void	rotate_left(node *target)
 {
@@ -169,26 +176,25 @@ void	insert(node *_root, node *newNode)
 	}
 }
 
-void	trans(node *target1, node *target2)
+void	trans(node *target, node *newNode)
 {
-	target2->color = target1->color;
-	if (target1->parent != nil)
+	if (target->parent != nil)
 	{
-		target2->parent = target1->parent;
-		if (target1->parent->left == target1)
-			target1->parent->left = target2;
+		if (target->parent->left == target)
+			target->parent->left = newNode;
 		else
-			target1->parent->right = target2;
-		if (target1->right != nil)
-		{
-			target1->right->parent = target2;
-			target2->right = target1->right;
-		}
+			target->parent->right = newNode;
+		newNode->parent = target->parent;
 	}
-	else
+	if (target->left != newNode)
 	{
-		root = target2;
-		target2 = nil;
+		newNode->left = target->left;
+		target->left->parent = newNode;
+	}
+	if (target->right != newNode)
+	{
+		newNode->right = target->right;
+		target->right->parent = newNode;
 	}
 }
 
@@ -254,20 +260,18 @@ bool	erase_fix_up_re(node *target, node *parent)
 
 void	erase_fix_up(node *target, node *parent)
 {
-	std::cout << target->value << std::endl;
-	std::cout << parent->value << std::endl;
 	node	*sibling = parent->left == target ? parent->right : parent->left;
 	node	*sibling_left = sibling->left;
 	node	*sibling_right = sibling->right;
 
 	if (erase_fix_up_re(target, parent))
+	{
 		return ;
+	}
 	// case 4 (all black)
-	else if (!(parent->color || sibling->color || sibling->left->color || sibling->right->color))
+	else if (!(parent->color || sibling->color || sibling_left->color || sibling_right->color))
 	{
 		sibling->color = RED;
-		std::cout << "case 4" << std::endl;
-		std::cout << parent->parent->value << std::endl;
 		erase_fix_up_re(parent, parent->parent);
 	}
 	// case 5
@@ -286,27 +290,63 @@ void	erase_fix_up(node *target, node *parent)
 void	erase(node *target)
 {
 	node	*newNode;
+	node	*child;
 
-	if (target->left == nil)
-	{
-		newNode = target->right;
-		trans(target, target->right);
-		delete target;
-		size--;
-	}
-	else
+	if (target->left != nil)
 	{
 		newNode = target->left;
 		while (newNode->right != nil)
 			newNode = newNode->right;
+		if (newNode->left == nil)
+			setNil(newNode);
+		child = newNode->left;
 		if (newNode->color == BLACK && newNode->left->color == RED)
+		{
 			newNode->left->color = BLACK;
+			trans(target, newNode);
+			delete target;
+			size--;
+		}
+		else if (newNode->color == BLACK && child->color == BLACK)
+		{
+			trans(target, newNode);
+			delete target;
+			size--;
+			erase_fix_up(child, child->parent);
+		}
+	}
+	else if (target->right != nil)
+	{
+		newNode = target->right;
+		while (newNode->left != nil)
+			newNode = newNode->left;
+		if (newNode->right == nil)
+			setNil(newNode);
+		child = newNode->right;
+		if (newNode->color == BLACK && newNode->right->color == RED)
+		{
+			newNode->right->color = BLACK;
+			trans(target, newNode);
+			delete target;
+			size--;
+		}
+		else if (newNode->color == BLACK && child->color == BLACK)
+		{
+			trans(target, newNode);
+			delete target;
+			size--;
+			erase_fix_up(child, child->parent);
+		}
+	}
+	else
+	{
+		newNode = target->right;
 		trans(target, newNode);
+		if (target->color == BLACK)
+			erase_fix_up(newNode->left, newNode);
 		delete target;
 		size--;
 	}
-	if (newNode->color == BLACK && newNode->left->color == BLACK)
-		erase_fix_up(newNode->left, newNode);
 }
 
 // void	node_print(node *target)

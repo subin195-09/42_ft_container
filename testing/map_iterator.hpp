@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 20:03:33 by skim              #+#    #+#             */
-/*   Updated: 2021/11/15 19:46:39 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/25 01:28:09 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ namespace ft
 			// red_black tree를 구성 후 좀 더 연구해볼 것
 			node<Key, T, Compare>	*getNow(void) const { return (now); }
 			saver<Key, T, Compare> 	*getSV(void) const { return (svr); }
+
 			node<Key, T, Compare>	*getPrev(void) const
 			{
 				if (now == NULL)
@@ -104,6 +105,7 @@ namespace ft
 					parent = parent->getParent();
 				return (parent);
 			}
+
 			node<Key, T, Compare>	*getNext(void) const
 			{
 				if (now == NULL)
@@ -364,13 +366,13 @@ namespace ft
 
 			mapReverseConstIterator<Key, T, Compare>	&operator++(void)
 			{
-				now = getNex();
+				now = getNext();
 				return (*this);
 			}
 			mapReverseConstIterator<Key, T, Compare>	operator++(int)
 			{
 				mapReverseConstIterator<Key, T, Compare> tmp(*this);
-				now = getNex();
+				now = getNext();
 				return (tmp);
 			}
 			mapReverseConstIterator<Key, T, Compare>	&operator--(void)
@@ -403,14 +405,14 @@ namespace ft
 					parent = parent->getParent();
 				return (parent);
 			}
-			node<Key, T, Compare>	*getNex(void) const
+			node<Key, T, Compare>	*getNext(void) const
 			{
 				if (now == NULL)
 					return (now->getRightest(svr->root));
 				if (now->getLeft() != NULL)
 					return (now->getRightest(now->getLeft()));
 				node<Key, T, Compare> *parent = now->getParent();
-				while (parent != NULL && cmp(parent->ip.first, now->ip.first))
+				while (parent != NULL && cmp(now->ip.first, parent->ip.first))
 					parent = parent->getParent();
 				return (parent);
 			}

@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/25 01:32:35 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/25 20:13:06 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,33 +29,34 @@ namespace ft
 			node	*left;
 			node	*right;
 			bool	color;
-			node	*nil;
 			Compare	cmp;
 
-			// private functions (deleteNode에 필요, pearan ver)
-			void childChange(node *from, node *to)
+			void	trans(node<Key, T, Compare> *target, node<Key, T, Compare> *newNode)
 			{
-				if (left == from)
-					left = to;
-				if (right == from)
-					right = to;
-			}
-
-			void makeParentChildToMyChild()
-			{
-				if (parent == NULL)
-					return ;
-				if (left == NULL)
-					parent->childChange(this, right);
-				else
-					parent->childChange(this, left);
+				if (target->parent != NULL)
+				{
+					if (target->parent->left == target)
+						target->parent->left = newNode;
+					else
+						target->parent->right = newNode;
+					newNode->parent = target->parent;
+				}
+				if (target->left != newNode)
+				{
+					newNode->left = target->left;
+					target->left->parent = newNode;
+				}
+				if (target->right != newNode)
+				{
+					newNode->right = target->right;
+					target->right->parent = newNode;
+				}
 			}
 
 			// setNil
-			void	setNil(void)
+			void	setNil(node<Key, T, Compare> *nil, node<Key, T, Compare> *nilParent)
 			{
-				nil = new node<Key, T, Compare>;
-				nil->parent = NULL;
+				nil->parent = nilParent;
 				nil->left = NULL;
 				nil->right = NULL;
 				nil->color = BLACK;
@@ -64,48 +65,48 @@ namespace ft
 			// rotation
 			void	rotateLeft(node<Key, T, Compare> *target)
 			{
-				node<Key, T, Compare>	*newRoot;
+				node<Key, T, Compare>	*newNode;
 				node<Key, T, Compare>	*root = getRoot(target);
 
-				newRoot = target->right;
-				target->right = newRoot->left;
-				if (newRoot->left != NULL)
-					newRoot->left->parent = target;
-				newRoot->parent = target->parent;
+				newNode = target->right;
+				target->right = newNode->left;
+				if (newNode->left != NULL)
+					newNode->left->parent = target;
+				newNode->parent = target->parent;
 				if (target == root)
-					root = newRoot;
+					root = newNode;
 				if (target->parent)
 				{
 					if (target == target->parent->left)
-						target->parent->left = newRoot;
+						target->parent->left = newNode;
 					else
-						target->parent->right = newRoot;
+						target->parent->right = newNode;
 				}
-				target->parent = newRoot;
-				newRoot->left = target;
+				target->parent = newNode;
+				newNode->left = target;
 			}
 
 			void	rotateRight(node<Key, T, Compare> *target)
 			{
-				node<Key, T, Compare>	*newRoot;
+				node<Key, T, Compare>	*newNode;
 				node<Key, T, Compare>	*root = getRoot(target);
 
-				newRoot = target->left;
-				target->left = newRoot->right;
-				if (newRoot->right != NULL)
-					newRoot->right->parent = target;
-				newRoot->parent = target->parent;
+				newNode = target->left;
+				target->left = newNode->right;
+				if (newNode->right != NULL)
+					newNode->right->parent = target;
+				newNode->parent = target->parent;
 				if (target == root)
-					root = newRoot;
+					root = newNode;
 				if (target->parent)
 				{
 					if (target == target->parent->left)
-						target->parent->left = newRoot;
+						target->parent->left = newNode;
 					else
-						target->parent->right = newRoot;
+						target->parent->right = newNode;
 				}
-				target->parent = newRoot;
-				newRoot->right = target;
+				target->parent = newNode;
+				newNode->right = target;
 			}
 
 		public:
@@ -216,8 +217,6 @@ namespace ft
 			{
 				node<Key, T, Compare>	*child;
 
-				if (!nil)
-					setNil();
 				if (cmp(root->ip.first, k) == false && cmp(k, root->ip.first) == false)
 				{
 					root->ip.second = v;
@@ -316,74 +315,146 @@ namespace ft
 				return (getRightest(root->right));
 			}
 
-			// deleteNode (erase) - pearan2 Ver (red_black tree 버전으로 수정하여야 함)
-			void deleteNode(node<Key, T, Compare>**real_root, node<Key, T, Compare> *root, const Key& tk)
+			bool	erase_fix_up_re(node<Key, T, Compare> *target, node<Key, T, Compare> *_parent)
 			{
-				node<Key, T, Compare> *newRoot;
+				node<Key, T, Compare>	*sibling = parent->left == target ? parent->right : parent->left;
+				node<Key, T, Compare>	*sibling_left = sibling->left;
+				node<Key, T, Compare>	*sibling_right = sibling->right;
 
-				if ((cmp(root->ip.first, tk) == false) && (cmp(tk, root->ip.first) == false))
+				// case 1
+				if (_parent->color == RED && sibling->color == BLACK && sibling_left->color == BLACK && sibling_right->color == BLACK)
 				{
-					if (root->left != NULL)
-					{
-						newRoot = getRightest(root->left);
-						newRoot->makeParentChildToMyChild(); // 부모와 자신자식의 라인을 이어준다. (이떄 newRoot 는 반드시 자식이 하나이므로 반드시 연결된다.)
-
-						////////////
-						if (newRoot->left != NULL)
-							newRoot->left->parent = newRoot->parent;
-						if (newRoot->right != NULL)
-							newRoot->right->parent = newRoot->parent;
-						///////////
-
-						newRoot->left = root->left;
-						newRoot->right = root->right;
-						newRoot->parent = root->parent;
-						if (root->parent != NULL)
-							root->parent->childChange(root, newRoot);
-						if (root->left != NULL)
-							root->left->parent = newRoot;
-						if (root->right != NULL)
-							root->right->parent = newRoot;
-						if (root == *real_root)
-							*real_root = newRoot;
-						delete (root);
-					}
-					else if (root->right != NULL)
-					{
-						newRoot = getLeftest(root->right);
-						newRoot->makeParentChildToMyChild(); // 부모와 자신자식의 라인을 이어준다. (이떄 newRoot 는 반드시 자식이 하나이므로 반드시 연결된다.)
-
-						////////////
-						if (newRoot->left != NULL)
-							newRoot->left->parent = newRoot->parent;
-						if (newRoot->right != NULL)
-							newRoot->right->parent = newRoot->parent;
-						///////////
-
-						newRoot->left = root->left;
-						newRoot->right = root->right;
-						newRoot->parent = root->parent;
-						if (root->parent != NULL)
-							root->parent->childChange(root, newRoot);
-						if (root->left != NULL)
-							root->left->parent = newRoot;
-						if (root->right != NULL)
-							root->right->parent = newRoot;
-						if (root == *real_root)
-							*real_root = newRoot;
-						delete (root);
-					}
-					else // 양쪽 자식 모두 없다. (부모쪽 링크만 없애주면됨. 아래에 아무것도 없다)
-					{
-						root->makeParentChildToMyChild();
-						delete root;
-					}
-					return ;
+					_parent->color = BLACK;
+					sibling->color = RED;
+					return (true);
 				}
-				if (cmp(root->ip.first, tk) == false)
-					deleteNode(real_root, root->left, tk);
-				else if (cmp(root->ip.first, tk))
-					deleteNode(real_root, root->right, tk);
+				// case 2, case 3
+				else if (sibling->color == BLACK && (sibling_right->color == RED || sibling_left->color == RED))
+				{
+					if (_parent->left == target)
+					{
+						if (sibling_right->color == RED)
+						{
+							sibling->color = _parent->color;
+							_parent->color = BLACK;
+							sibling_right->color = BLACK;
+							rotateLeft(_parent);
+						}
+						else
+						{
+							if (sibling_left->color == RED)
+							{
+								sibling_left->color = BLACK;
+								sibling->color = RED;
+								rotateRight(sibling);
+							}
+						}
+						return (true);
+					}
+					else if (_parent->right == target)
+					{
+						if (sibling_left->color == RED)
+						{
+							sibling->color = _parent->color;
+							_parent->color = BLACK;
+							sibling_left->color = BLACK;
+							rotateRight(_parent);
+						}
+						else
+						{
+							if (sibling_right->color == RED)
+							{
+								sibling_right->color = BLACK;
+								sibling->color = RED;
+								rotateLeft(sibling);
+							}
+						}
+						return (true);
+					}
+				}
+				return (false);
+			}
+
+			void	erase_fix_up(node<Key, T, Compare> *target, node<Key, T, Compare> *_parent)
+			{
+				node<Key, T, Compare>	*sibling = _parent->left == target ? _parent->right : _parent->left;
+				node<Key, T, Compare>	*sibling_left = sibling->left;
+				node<Key, T, Compare>	*sibling_right = sibling->right;
+
+				if (erase_fix_up_re(target, _parent))
+					return ;
+				// case 4 (all black)
+				else if (!(_parent->color || sibling->color || sibling->left->color || sibling->right->color))
+				{
+					sibling->color = RED;
+					erase_fix_up_re(_parent, _parent->parent);
+				}
+				// case 5
+				else if (sibling->color == RED && _parent->color == BLACK && sibling_left->color == BLACK && sibling_right->color == BLACK)
+				{
+					_parent->color = RED;
+					sibling->color = BLACK;
+					if (_parent->left == target)
+						rotateLeft(_parent);
+					else
+						rotateRight(_parent);
+					erase_fix_up_re(target, _parent);
+				}
+			}
+
+			void deleteNode(node<Key, T, Compare> **real_root, node<Key, T, Compare> *target, const Key& key)
+			{
+				node<Key, T, Compare>	*newNode;
+				node<Key, T, Compare>	*nil = new node<Key, T, Compare>;
+				bool					checker = false;
+
+				if (target->ip.first == key)
+				{
+					if (target->left != NULL)
+					{
+						newNode = getRightest(target->left);
+						if (newNode->left == NULL)
+							setNil(nil, newNode);
+						if (newNode->color == BLACK)
+						{
+							checker = newNode->left->color == BLACK ? true : false;
+							if (newNode->left->color == RED)
+								newNode->left->color = BLACK;
+						}
+						trans(target, newNode);
+						delete target;
+						if (checker)
+							erase_fix_up(newNode->left, newNode);
+					}
+					else if (target->right != NULL)
+					{
+						newNode = getLeftest(target->right);
+						if (newNode->right == NULL)
+							setNil(nil, newNode);
+						if (newNode->color == BLACK)
+						{
+							checker = newNode->right->color == BLACK ? true : false;
+							if (newNode->right->color == RED)
+								newNode->right->color = BLACK;
+						}
+						trans(target, newNode);
+						delete target;
+						if (checker)
+							erase_fix_up(newNode->right, newNode);
+					}
+					else
+					{
+						target->left = nil;
+						trans(target, nil);
+						if (target->color == BLACK)
+							erase_fix_up(nil, nil->parent);
+						delete target;
+					}
+				}
+				if (cmp(target->ip.first, key) == false)
+					deleteNode(real_root, target->left, key);
+				else if (cmp(target->ip.first, key))
+					deleteNode(real_root, target->right, key);
 			}
 
 			// getter

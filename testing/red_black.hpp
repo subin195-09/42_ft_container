@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/15 14:25:49 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/25 01:05:51 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,10 @@ namespace ft
 			node	*left;
 			node	*right;
 			bool	color;
+			node	*nil;
 			Compare	cmp;
 
-			// priate functions (deleteNode에 필요, pearan ver)
+			// private functions (deleteNode에 필요, pearan ver)
 			void childChange(node *from, node *to)
 			{
 				if (left == from)
@@ -50,12 +51,69 @@ namespace ft
 					parent->childChange(this, left);
 			}
 
+			// setNil
+			void	setNil(void)
+			{
+				nil = new node<Key, T, Compare>;
+				nil->parent = NULL;
+				nil->left = NULL;
+				nil->right = NULL;
+				nil->color = BLACK;
+			}
+
+			// rotation
+			void	rotateLeft(node<Key, T, Compare> *target)
+			{
+				node<Key, T, Compare>	*newRoot;
+				node<Key, T, Compare>	*root = getRoot(target);
+
+				newRoot = target->right;
+				target->right = newRoot->left;
+				if (newRoot->left != NULL)
+					newRoot->left->parent = target;
+				newRoot->parent = target->parent;
+				if (target == root)
+					root = newRoot;
+				if (target->parent)
+				{
+					if (target == target->parent->left)
+						target->parent->left = newRoot;
+					else
+						target->parent->right = newRoot;
+				}
+				target->parent = newRoot;
+				newRoot->left = target;
+			}
+
+			void	rotateRight(node<Key, T, Compare> *target)
+			{
+				node<Key, T, Compare>	*newRoot;
+				node<Key, T, Compare>	*root = getRoot(target);
+
+				newRoot = target->left;
+				target->left = newRoot->right;
+				if (newRoot->right != NULL)
+					newRoot->right->parent = target;
+				newRoot->parent = target->parent;
+				if (target == root)
+					root = newRoot;
+				if (target->parent)
+				{
+					if (target == target->parent->left)
+						target->parent->left = newRoot;
+					else
+						target->parent->right = newRoot;
+				}
+				target->parent = newRoot;
+				newRoot->right = target;
+			}
+
 		public:
 			pair<const Key, T>	ip;
 
-			node() : parent(NULL), left(NULL), right(NULL) {}
-			node(Key first, T second = T()) :  parent(NULL), left(NULL), right(NULL) ,ip(first, second) {}
-			node(const pair<Key, T> &p) : parent(NULL), left(NULL), right(NULL) ,ip(p) {}
+			node() : parent(NULL), left(NULL), right(NULL), color(BLACK) {}
+			node(Key first, T second = T()) :  parent(NULL), left(NULL), right(NULL) , color(BLACK),ip(first, second) {}
+			node(const pair<Key, T> &p) : parent(NULL), left(NULL), right(NULL) ,ip(p), color(BLACK) {}
 
 			//deep copy 추후 좀 더 연구해 볼 것
 			node(const node<Key, T, Compare> &origin, node<Key, T, Compare> *parent = NULL) : parent(parent), left(NULL), right(NULL), ip(origin.ip)
@@ -105,11 +163,61 @@ namespace ft
 				}
 			}
 
+			void					insertFixup(node<Key, T, Compare> *target)
+			{
+				if (!(target->color == RED && target->parent->color == RED))
+					return ;
+				node<Key, T, Compare>	*_parent = target->parent;
+				node<Key, T, Compare>	*_grand = _parent->parent;
+				node<Key, T, Compare>	*_uncle = _grand->left == _parent ? _grand->right : _grand->left;
+				node<Key, T, Compare>	*root = getRoot(target);
+
+
+				if (_uncle != NULL && _uncle->color == RED)
+				{
+					_parent->color = BLACK;
+					_uncle->color = BLACK;
+					_grand->color = _grand == root ? BLACK : RED;
+					if (_grand->color == RED && _grand->parent->color == RED)
+						insertFixup(_grand);
+				}
+				else
+				{
+					if (_parent == _grand->left)
+					{
+						_grand->color = RED;
+						if (target == _parent->right && _parent == _grand->left)
+						{
+							target->color = BLACK;
+							rotateLeft(_parent);
+						}
+						else
+							_parent->color = BLACK;
+						rotateRight(_grand);
+					}
+					else
+					{
+						_grand->color = RED;
+						if (target == _parent->left && _parent == _grand->right)
+						{
+							target->color = BLACK;
+							rotateRight(parent);
+						}
+						else
+							_parent->color = BLACK;
+						rotateLeft(_grand);
+					}
+					_grand->color = RED;
+				}
+			}
+
 			// mergeInsert (insert) : value를 갱신하거나, key를 추가함
 			node<Key, T, Compare>	*mergeInsert(node<Key, T, Compare> *root, const Key &k, const T &v = T())
 			{
 				node<Key, T, Compare>	*child;
 
+				if (!nil)
+					setNil();
 				if (cmp(root->ip.first, k) == false && cmp(k, root->ip.first) == false)
 				{
 					root->ip.second = v;
@@ -117,24 +225,30 @@ namespace ft
 				}
 				if (cmp(root->ip.first, k))
 				{
-					// 새로운 key 추가 (red_black tree 버전으로 수정하여야 함)
 					if (root->right == NULL)
 					{
 						child = new node<Key, T, Compare>(k, v);
 						root->right = child;
 						child->parent = root;
+						child->left = NULL;
+						child->right = NULL;
+						child->color = RED;
+						insertFixup(child);
 						return (child);
 					}
 					return (mergeInsert(root->right, k, v));
 				}
 				else
 				{
-					// 새로운 key 추가
 					if (root->left == NULL)
 					{
 						child = new node<Key, T, Compare>(k, v);
 						root->left = child;
 						child->parent = root;
+						child->left = NULL;
+						child->right = NULL;
+						child->color = RED;
+						insertFixup(child);
 						return (child);
 					}
 					return (mergeInsert(root->left, k, v));
@@ -148,7 +262,11 @@ namespace ft
 				if (!cmp(key, root->ip.first)) // first <= key
 				{
 					if (root->right == NULL)
-						return (NULL);
+					{
+						if (root->parent->ip.first < root->ip.first)
+							return (NULL);
+						return (root->parent);
+					}
 					else
 						return (getUpperBound(root->right, key));
 				}
@@ -170,7 +288,7 @@ namespace ft
 				if (cmp(root->ip.first, key)) // first < key
 				{
 					if (root->right == NULL)
-						return (root);
+						return (NULL);
 					else
 						return (getLowerBound(root->right, key));
 				}
@@ -272,6 +390,29 @@ namespace ft
 			node<Key, T, Compare>	*getParent() { return (this->parent); }
 			node<Key, T, Compare>	*getLeft() { return (this->left); }
 			node<Key, T, Compare>	*getRight() { return (this->right); }
+
+			void	tree_print(node *_root, std::string indent, bool last)
+			{
+				// print the tree structure on the screen
+				if (_root != NULL)
+				{
+					std::cout << indent;
+					if (last)
+					{
+						std::cout << "R----";
+						indent += "     ";
+					}
+					else
+					{
+						std::cout << "L----";
+						indent += "|    ";
+					}
+					std::string sColor = (_root->color == RED) ? "RED" : "BLACK";
+					std::cout << _root->ip.first << "(" << sColor << ")" << std::endl;
+					tree_print(_root->left, indent, false);
+					tree_print(_root->right, indent, true);
+				}
+			}
 
 	};
 

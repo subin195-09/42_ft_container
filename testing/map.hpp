@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/11/15 18:01:09 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/24 18:46:57 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,8 +123,8 @@ namespace ft
 			const_iterator			begin() const { return (const_iterator(root->getLeftest(root), svr)); }
 			iterator				end() { return iterator(NULL, svr); }
 			const_iterator			end() const { return (const_iterator(NULL, svr)); }
-			reverse_iterator		rbegin() { return reverse_iterator(reverse_iterator(root->getRightest(root), svr)); }
-			const_reverse_iterator	rbegin() const { return (const_reverse_iterator(reverse_iterator(root->getRightest(root), svr))); }
+			reverse_iterator		rbegin() { return (reverse_iterator(root->getRightest(root), svr)); }
+			const_reverse_iterator	rbegin() const { return (const_reverse_iterator(root->getRightest(root), svr)); }
 			reverse_iterator		rend() { return reverse_iterator(NULL, svr); }
 			const_reverse_iterator	rend() const { return (const_reverse_iterator(NULL, svr)); }
 
@@ -151,7 +151,10 @@ namespace ft
 					else
 					{
 						num_of_ele++;
-						return (root->mergeInsert(root, key)->ip.second);
+						mapped_type &ret = root->mergeInsert(root, key)->ip.second;
+						root = root->getRoot(root);
+						setSV();
+						return (ret);
 					}
 				}
 			}
@@ -178,6 +181,8 @@ namespace ft
 					{
 						num_of_ele++;
 						ret = root->mergeInsert(root, x.first, x.second);
+						root = root->getRoot(root);
+						setSV();
 						return (pair<iterator, bool>(iterator(ret, svr), true));
 					}
 				}
@@ -324,6 +329,11 @@ namespace ft
 			pair<const_iterator, const_iterator>	equal_range(const key_type &key) const
 			{
 				return (pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key)));
+			}
+
+			void	nodePrint(void)
+			{
+				root->tree_print(root, "", true);
 			}
 	};
 
