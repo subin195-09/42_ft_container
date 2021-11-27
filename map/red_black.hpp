@@ -41,12 +41,12 @@ namespace ft
 						target->parent->right = newNode;
 					newNode->parent = target->parent;
 				}
-				if (target->left != newNode)
+				if (target->left != NULL && target->left != newNode)
 				{
 					newNode->left = target->left;
 					target->left->parent = newNode;
 				}
-				if (target->right != newNode)
+				if (target->right != NULL && target->right != newNode)
 				{
 					newNode->right = target->right;
 					target->right->parent = newNode;
@@ -317,9 +317,10 @@ namespace ft
 
 			bool	erase_fix_up_re(node<Key, T, Compare> *target, node<Key, T, Compare> *_parent)
 			{
-				node<Key, T, Compare>	*sibling = parent->left == target ? parent->right : parent->left;
-				node<Key, T, Compare>	*sibling_left = sibling->left;
-				node<Key, T, Compare>	*sibling_right = sibling->right;
+				node<Key, T, Compare>	*nil = new node<Key, T, Compare>();
+				node<Key, T, Compare>	*sibling = _parent->left == target ? _parent->right : _parent->left;
+				node<Key, T, Compare>	*sibling_left = sibling->left == NULL ? nil : sibling->left;
+				node<Key, T, Compare>	*sibling_right = sibling->right == NULL ? nil : sibling->right;
 
 				// case 1
 				if (_parent->color == RED && sibling->color == BLACK && sibling_left->color == BLACK && sibling_right->color == BLACK)
@@ -333,14 +334,14 @@ namespace ft
 				{
 					if (_parent->left == target)
 					{
-						if (sibling_right->color == RED)
+						if (sibling_right->color == RED) // case 2
 						{
 							sibling->color = _parent->color;
 							_parent->color = BLACK;
 							sibling_right->color = BLACK;
 							rotateLeft(_parent);
 						}
-						else
+						else // case 3
 						{
 							if (sibling_left->color == RED)
 							{
@@ -353,14 +354,14 @@ namespace ft
 					}
 					else if (_parent->right == target)
 					{
-						if (sibling_left->color == RED)
+						if (sibling_left->color == RED) // case 2
 						{
 							sibling->color = _parent->color;
 							_parent->color = BLACK;
 							sibling_left->color = BLACK;
 							rotateRight(_parent);
 						}
-						else
+						else // case 3
 						{
 							if (sibling_right->color == RED)
 							{
@@ -377,17 +378,19 @@ namespace ft
 
 			void	erase_fix_up(node<Key, T, Compare> *target, node<Key, T, Compare> *_parent)
 			{
+				node<Key, T, Compare>	*nil = new node<Key, T, Compare>();
 				node<Key, T, Compare>	*sibling = _parent->left == target ? _parent->right : _parent->left;
-				node<Key, T, Compare>	*sibling_left = sibling->left;
-				node<Key, T, Compare>	*sibling_right = sibling->right;
+				node<Key, T, Compare>	*sibling_left = sibling->left == NULL ? nil : sibling->left;
+				node<Key, T, Compare>	*sibling_right = sibling->right == NULL ? nil : sibling->right;
 
 				if (erase_fix_up_re(target, _parent))
 					return ;
 				// case 4 (all black)
-				else if (!(_parent->color || sibling->color || sibling->left->color || sibling->right->color))
+				else if (!(_parent->color || sibling->color || sibling_left->color || sibling_right->color))
 				{
 					sibling->color = RED;
-					erase_fix_up_re(_parent, _parent->parent);
+					if (_parent->parent != NULL)
+						erase_fix_up_re(_parent, _parent->parent);
 				}
 				// case 5
 				else if (sibling->color == RED && _parent->color == BLACK && sibling_left->color == BLACK && sibling_right->color == BLACK)
@@ -405,7 +408,7 @@ namespace ft
 			void deleteNode(node<Key, T, Compare> **real_root, node<Key, T, Compare> *target, const Key& key)
 			{
 				node<Key, T, Compare>	*newNode;
-				node<Key, T, Compare>	*nil = new node<Key, T, Compare>;
+				node<Key, T, Compare>	*nil = new node<Key, T, Compare>();
 				bool					checker = false;
 
 				if (target->ip.first == key)
@@ -421,6 +424,8 @@ namespace ft
 							if (newNode->left->color == RED)
 								newNode->left->color = BLACK;
 						}
+						else
+							newNode->color = target->color;
 						trans(target, newNode);
 						delete target;
 						if (checker)
@@ -437,19 +442,33 @@ namespace ft
 							if (newNode->right->color == RED)
 								newNode->right->color = BLACK;
 						}
+						else
+							newNode->color = target->color;
+						std::cout << target->ip.first << ", " << newNode->ip.first << std::endl;
 						trans(target, newNode);
+						tree_print(getRoot(newNode), "" , true);
 						delete target;
 						if (checker)
 							erase_fix_up(newNode->right, newNode);
 					}
 					else
 					{
+						newNode = nil;
 						target->left = nil;
+						setNil(nil, target);
 						trans(target, nil);
 						if (target->color == BLACK)
 							erase_fix_up(nil, nil->parent);
-						delete target;
 					}
+					*real_root = getRoot(newNode);
+					if (nil->parent != NULL)
+					{
+						if (nil->parent->left == nil)
+							nil->parent->left = NULL;
+						else
+							nil->parent->right = NULL;
+					}
+					return ;
 				}
 				if (cmp(target->ip.first, key) == false)
 					deleteNode(real_root, target->left, key);
