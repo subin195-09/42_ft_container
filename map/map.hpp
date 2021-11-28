@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/11/28 18:17:06 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/28 18:54:45 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,6 +216,7 @@ namespace ft
 							delete (root);
 							root = NULL;
 							setSV();
+							num_of_ele--;
 							return (1);
 						}
 						root->deleteNode(&root, root, key);

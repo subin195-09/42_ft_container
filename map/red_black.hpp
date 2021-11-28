@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/28 18:45:19 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/28 18:53:25 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -422,13 +422,9 @@ namespace ft
 
 				if (target->ip.first == key)
 				{
-					std::cout << "erase : " << key << std::endl;
-					tree_print(*real_root, "", true);
 					if (target->left != NULL)
 					{
 						newNode = getRightest(target->left);
-						std::cout << target->ip.first << std::endl;
-						std::cout << newNode->ip.first << std::endl;
 						if (newNode->left == NULL)
 						{
 							setNil(nil, newNode);
