@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/25 20:13:06 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/28 18:45:19 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,13 @@ namespace ft
 
 			void	trans(node<Key, T, Compare> *target, node<Key, T, Compare> *newNode)
 			{
+				if (newNode->parent != NULL)
+				{
+					if (newNode->parent->left == newNode)
+						newNode->parent->left = NULL;
+					else
+						newNode->parent->right = NULL;
+				}
 				if (target->parent != NULL)
 				{
 					if (target->parent->left == target)
@@ -41,6 +48,8 @@ namespace ft
 						target->parent->right = newNode;
 					newNode->parent = target->parent;
 				}
+				else
+					newNode->parent = NULL;
 				if (target->left != NULL && target->left != newNode)
 				{
 					newNode->left = target->left;
@@ -315,7 +324,7 @@ namespace ft
 				return (getRightest(root->right));
 			}
 
-			bool	erase_fix_up_re(node<Key, T, Compare> *target, node<Key, T, Compare> *_parent)
+			bool					erase_fix_up_re(node<Key, T, Compare> *target, node<Key, T, Compare> *_parent)
 			{
 				node<Key, T, Compare>	*nil = new node<Key, T, Compare>();
 				node<Key, T, Compare>	*sibling = _parent->left == target ? _parent->right : _parent->left;
@@ -376,7 +385,7 @@ namespace ft
 				return (false);
 			}
 
-			void	erase_fix_up(node<Key, T, Compare> *target, node<Key, T, Compare> *_parent)
+			void					erase_fix_up(node<Key, T, Compare> *target, node<Key, T, Compare> *_parent)
 			{
 				node<Key, T, Compare>	*nil = new node<Key, T, Compare>();
 				node<Key, T, Compare>	*sibling = _parent->left == target ? _parent->right : _parent->left;
@@ -390,7 +399,7 @@ namespace ft
 				{
 					sibling->color = RED;
 					if (_parent->parent != NULL)
-						erase_fix_up_re(_parent, _parent->parent);
+						erase_fix_up(_parent, _parent->parent);
 				}
 				// case 5
 				else if (sibling->color == RED && _parent->color == BLACK && sibling_left->color == BLACK && sibling_right->color == BLACK)
@@ -405,7 +414,7 @@ namespace ft
 				}
 			}
 
-			void deleteNode(node<Key, T, Compare> **real_root, node<Key, T, Compare> *target, const Key& key)
+			void					deleteNode(node<Key, T, Compare> **real_root, node<Key, T, Compare> *target, const Key& key)
 			{
 				node<Key, T, Compare>	*newNode;
 				node<Key, T, Compare>	*nil = new node<Key, T, Compare>();
@@ -413,11 +422,18 @@ namespace ft
 
 				if (target->ip.first == key)
 				{
+					std::cout << "erase : " << key << std::endl;
+					tree_print(*real_root, "", true);
 					if (target->left != NULL)
 					{
 						newNode = getRightest(target->left);
+						std::cout << target->ip.first << std::endl;
+						std::cout << newNode->ip.first << std::endl;
 						if (newNode->left == NULL)
+						{
 							setNil(nil, newNode);
+							newNode->left = nil;
+						}
 						if (newNode->color == BLACK)
 						{
 							checker = newNode->left->color == BLACK ? true : false;
@@ -435,7 +451,10 @@ namespace ft
 					{
 						newNode = getLeftest(target->right);
 						if (newNode->right == NULL)
+						{
 							setNil(nil, newNode);
+							newNode->right = nil;
+						}
 						if (newNode->color == BLACK)
 						{
 							checker = newNode->right->color == BLACK ? true : false;
@@ -444,9 +463,7 @@ namespace ft
 						}
 						else
 							newNode->color = target->color;
-						std::cout << target->ip.first << ", " << newNode->ip.first << std::endl;
 						trans(target, newNode);
-						tree_print(getRoot(newNode), "" , true);
 						delete target;
 						if (checker)
 							erase_fix_up(newNode->right, newNode);
@@ -465,7 +482,7 @@ namespace ft
 					{
 						if (nil->parent->left == nil)
 							nil->parent->left = NULL;
-						else
+						else if (nil->parent->right == nil)
 							nil->parent->right = NULL;
 					}
 					return ;
@@ -481,7 +498,7 @@ namespace ft
 			node<Key, T, Compare>	*getLeft() { return (this->left); }
 			node<Key, T, Compare>	*getRight() { return (this->right); }
 
-			void	tree_print(node *_root, std::string indent, bool last)
+			void					tree_print(node *_root, std::string indent, bool last)
 			{
 				// print the tree structure on the screen
 				if (_root != NULL)

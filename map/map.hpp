@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/11/24 18:46:57 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/28 18:17:06 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,14 +211,16 @@ namespace ft
 						return (0);
 					else
 					{
+						if (num_of_ele == 1)
+						{
+							delete (root);
+							root = NULL;
+							setSV();
+							return (1);
+						}
 						root->deleteNode(&root, root, key);
 						setSV();
 						num_of_ele--;
-						if (num_of_ele == 0)
-						{
-							root = NULL;
-							setSV();
-						}
 						return (1);
 					}
 				}
