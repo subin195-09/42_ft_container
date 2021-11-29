@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/28 18:53:25 by skim             ###   ########.fr       */
+/*   Updated: 2021/11/29 18:57:06 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,35 @@ namespace ft
 				if (newNode->parent != NULL)
 				{
 					if (newNode->parent->left == newNode)
-						newNode->parent->left = NULL;
+					{
+						if (newNode->left != NULL)
+						{
+							newNode->parent->left = newNode->left;
+							newNode->left->parent = newNode->parent;
+						}
+						else if (newNode->right != NULL)
+						{
+							newNode->parent->left = newNode->right;
+							newNode->right->parent = newNode->parent;
+						}
+						else
+							newNode->parent->left = NULL;
+					}
 					else
-						newNode->parent->right = NULL;
+					{
+						if (newNode->left != NULL)
+						{
+							newNode->parent->right = newNode->left;
+							newNode->left->parent = newNode->parent;
+						}
+						else if (newNode->right != NULL)
+						{
+							newNode->parent->right = newNode->right;
+							newNode->right->parent = newNode->parent;
+						}
+						else
+							newNode->parent->right = NULL;
+					}
 				}
 				if (target->parent != NULL)
 				{
@@ -481,6 +507,8 @@ namespace ft
 						else if (nil->parent->right == nil)
 							nil->parent->right = NULL;
 					}
+					delete nil;
+					nil = NULL;
 					return ;
 				}
 				if (cmp(target->ip.first, key) == false)
