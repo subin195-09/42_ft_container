@@ -36,4 +36,21 @@ int     main(void)
 
 	m.nodePrint();
 	printSize(m);
+
+	std::cout << "=====erase test=====" << std::endl;
+	std::cout << "erase 'a'" << std::endl;
+	m.erase('a');
+	m.nodePrint();
+	std::cout << "erase 'd'" << std::endl;
+	m.erase('d');
+	m.nodePrint();
+	std::cout << "erase 'b'" << std::endl;
+	m.erase('b');
+	m.nodePrint();
+	std::cout << "erase 'c'" << std::endl;
+	m.erase('c');
+	m.nodePrint();
+	std::cout << "erase 'e'" << std::endl;
+	m.erase('e');
+	m.nodePrint();
 }

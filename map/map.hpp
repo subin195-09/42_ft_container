@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/11/30 18:50:53 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/01 14:01:09 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -334,6 +334,7 @@ namespace ft
 				return (pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key)));
 			}
 
+			Alloc	get_allocator() const { return (Alloc()); }
 			void	nodePrint(void)
 			{
 				root->tree_print(root, "", true);
