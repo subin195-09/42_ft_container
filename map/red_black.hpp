@@ -317,11 +317,16 @@ namespace ft
 			{
 				if (root->ip.first == key)
 					return (root);
-
+				std::cout << root->ip.first << ", " << key << std::endl;
+				tree_print(getRoot(root), "", true);
 				if (cmp(root->ip.first, key)) // first < key
 				{
 					if (root->right == NULL)
+					{
+						if (root->parent->ip.first < root->ip.first)
+							return (NULL);
 						return (NULL);
+					}
 					else
 						return (getLowerBound(root->right, key));
 				}
@@ -382,6 +387,9 @@ namespace ft
 								sibling_left->color = BLACK;
 								sibling->color = RED;
 								rotateRight(sibling);
+								_parent->color = BLACK;
+								sibling->color = BLACK;
+								rotateLeft(_parent);
 							}
 						}
 						return (true);

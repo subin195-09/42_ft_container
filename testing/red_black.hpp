@@ -208,7 +208,6 @@ namespace ft
 				node<Key, T, Compare>	*_uncle = _grand->left == _parent ? _grand->right : _grand->left;
 				node<Key, T, Compare>	*root = getRoot(target);
 
-
 				if (_uncle != NULL && _uncle->color == RED)
 				{
 					_parent->color = BLACK;
@@ -237,7 +236,7 @@ namespace ft
 						if (target == _parent->left && _parent == _grand->right)
 						{
 							target->color = BLACK;
-							rotateRight(parent);
+							rotateRight(_parent);
 						}
 						else
 							_parent->color = BLACK;
@@ -318,7 +317,6 @@ namespace ft
 			{
 				if (root->ip.first == key)
 					return (root);
-
 				if (cmp(root->ip.first, key)) // first < key
 				{
 					if (root->right == NULL)
@@ -328,7 +326,7 @@ namespace ft
 				}
 				else
 				{
-					if (root->left == NULL)
+					if (root->left == NULL || cmp(root->left->ip.first, key))
 						return (root);
 					else
 						return (getLowerBound(root->left, key));
@@ -383,6 +381,9 @@ namespace ft
 								sibling_left->color = BLACK;
 								sibling->color = RED;
 								rotateRight(sibling);
+								_parent->color = BLACK;
+								sibling->color = BLACK;
+								rotateLeft(_parent);
 							}
 						}
 						return (true);
