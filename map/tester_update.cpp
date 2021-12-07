@@ -1,64 +1,57 @@
 #include "common.hpp"
+#include <list>
 
-#define T1 int
-#define T2 std::string
-typedef TESTED_NAMESPACE::map<T1, T2>::value_type T3;
+#define T1 std::string
 
 static int iter = 0;
 
-template <typename MAP>
-void	ft_erase(MAP &mp, const T1 param)
+template <typename SET, typename U>
+void	ft_erase(SET &st, U param)
 {
 	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
-	mp.erase(param);
-	printSize(mp);
+	st.erase(param);
+	printSize(st);
+}
+
+template <typename SET, typename U, typename V>
+void	ft_erase(SET &st, U param, V param2)
+{
+	std::cout << *param << ", " << *param2 << std::endl;
+	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+	st.erase(param, param2);
+	printSize(st);
 }
 
 int		main(void)
 {
-	TESTED_NAMESPACE::map<T1, T2> mp;
+	std::list<T1> lst;
+	unsigned int lst_size = 10;
+	for (unsigned int i = 0; i < lst_size; ++i)
+		lst.push_back(std::string((lst_size - i), i + 65));
+	TESTED_NAMESPACE::set<T1> st(lst.begin(), lst.end());
+	printSize(st);
 
-	mp[42] = "lol";
+	ft_erase(st, ++st.begin());
 
-	mp[50] = "mdr";
-	mp[25] = "funny";
+	ft_erase(st, st.begin());
+	ft_erase(st, --st.end());
 
-	mp[46] = "bunny";
-	mp[21] = "fizz";
-	mp[30] = "buzz";
-	mp[55] = "fuzzy";
+	ft_erase(st, st.begin(), ++(++(++st.begin())));
+	ft_erase(st, --(--(--st.end())), --st.end());
 
-	mp[18] = "bee";
-	mp[23] = "coconut";
-	mp[28] = "diary";
-	mp[35] = "fiesta";
-	mp[44] = "hello";
-	mp[48] = "world";
-	mp[53] = "this is a test";
-	mp[80] = "hey";
+	st.insert("Hello");
+	st.insert("Hi there");
+	st.nodePrint();
+	printSize(st);
+	std::cout << *(st.end()) << std::endl;
+	ft_erase(st, --(--(--st.end())), st.end());
 
-	mp[12] = "no";
-	mp[20] = "idea";
-	mp[22] = "123";
-	mp[24] = "345";
-	mp[27] = "27";
-	mp[29] = "29";
-	mp[33] = "33";
-	mp[38] = "38";
+	st.insert("ONE");
+	st.insert("TWO");
+	st.insert("THREE");
+	st.insert("FOUR");
+	printSize(st);
+	ft_erase(st, st.begin(), st.end());
 
-	mp[43] = "1";
-	mp[45] = "2";
-	mp[47] = "3";
-	mp[49] = "4";
-	mp[51] = "5";
-	mp[54] = "6";
-	mp[60] = "7";
-	mp[90] = "8";
-
-	printSize(mp);
-
-	ft_erase(mp, 25); // right != NULL; left != NULL
-	ft_erase(mp, 55); // right != NULL; left != NULL
-	ft_erase(mp, 24); // right != NULL; left != NULL
 	return (0);
 }

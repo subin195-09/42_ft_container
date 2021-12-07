@@ -208,7 +208,6 @@ namespace ft
 				node<Key, T, Compare>	*_uncle = _grand->left == _parent ? _grand->right : _grand->left;
 				node<Key, T, Compare>	*root = getRoot(target);
 
-
 				if (_uncle != NULL && _uncle->color == RED)
 				{
 					_parent->color = BLACK;
@@ -237,7 +236,7 @@ namespace ft
 						if (target == _parent->left && _parent == _grand->right)
 						{
 							target->color = BLACK;
-							rotateRight(parent);
+							rotateRight(_parent);
 						}
 						else
 							_parent->color = BLACK;
