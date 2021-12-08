@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 14:02:54 by skim              #+#    #+#             */
-/*   Updated: 2021/12/01 15:26:41 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/08 16:34:57 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@
 
 namespace ft
 {
-	template <class Key, class Compare = ft::less<Key>, class Alloc = std::allocator<Key> >
+	template <class Key, class compare = ft::less<Key>, class Alloc = std::allocator<Key> >
 	class set
 	{
 		public:
 			typedef Key					key_type;
 			typedef Key					value_type;
-			typedef Compare				key_compare;
+			typedef compare				key_compare;
 			typedef key_compare			value_compare;
 			typedef Alloc				allocator_type;
 			typedef size_t				size_type;
@@ -39,10 +39,10 @@ namespace ft
 			typedef const value_type*	const_pointer;
 
 			// allocator
-			typedef setIterator<Key, Key, Compare>				iterator;
-			typedef setConstIterator<Key, Key, Compare>			const_iterator;
-			typedef setReverseIterator<Key, Key, Compare>		reverse_iterator;
-			typedef setReverseConstIterator<Key, Key, Compare>	const_reverse_iterator;
+			typedef setConstIterator<Key, Key, compare>				iterator;
+			typedef setConstIterator<Key, Key, compare>				const_iterator;
+			typedef setReverseConstIterator<Key, Key, compare>		reverse_iterator;
+			typedef setReverseConstIterator<Key, Key, compare>		const_reverse_iterator;
 
 		private:
 			node<key_type, value_type, key_compare>		*root;
@@ -54,37 +54,37 @@ namespace ft
 		public:
 			/** Basic function **/
 			// default constructor
-			explicit set(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) : root(NULL), num_of_ele(0)
+			explicit set(const key_compare &cmp = key_compare(), const allocator_type &alloc = allocator_type()) : root(NULL), num_of_ele(0)
 			{
-				(void)comp;
+				(void)cmp;
 				(void)alloc;
-				svr = new ft::saver<Key, Key, Compare>();
+				svr = new ft::saver<Key, Key, compare>();
 			}
 
 			// range constructor
 			template <class InputIterator>
-			set (InputIterator first, InputIterator last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) : root(NULL), num_of_ele(0)
+			set (InputIterator first, InputIterator last, const key_compare &cmp = key_compare(), const allocator_type &alloc = allocator_type()) : root(NULL), num_of_ele(0)
 			{
-				(void)comp;
+				(void)cmp;
 				(void)alloc;
-				svr = new ft::saver<Key, Key, Compare>();
+				svr = new ft::saver<Key, Key, compare>();
 				insert(first, last);
 			}
 
 			// copy constructor
 			set (const set &x) : root(NULL), num_of_ele(0)
 			{
-				root = new node<Key, Key, Compare>(*(x.root));
+				root = new node<Key, Key, compare>(*(x.root));
 				num_of_ele = x.num_of_ele;
-				svr = new ft::saver<Key, Key, Compare>();
+				svr = new ft::saver<Key, Key, compare>();
 				setSV();
 			}
 
 			// =operator
-			set<Key, Compare, Alloc>	&operator=(const set<Key, Compare, Alloc> &x)
+			set<Key, compare, Alloc>	&operator=(const set<Key, compare, Alloc> &x)
 			{
 				root->deleteAll(root);
-				root = new node<Key, Key, Compare>(*(x.root));
+				root = new node<Key, Key, compare>(*(x.root));
 				num_of_ele = x.num_of_ele;
 				setSV();
 				return (*this);
@@ -112,15 +112,15 @@ namespace ft
 			bool		empty() const { return (num_of_ele == 0); }
 			size_type	size() const { return (num_of_ele); }
 			size_type	max_size() const { return (Alloc().max_size()); }
-			
+
 			/** Modifiers **/
 			pair<iterator, bool>	insert(const key_type &x)
 			{
-				node<Key, Key, Compare>	*ret;
+				node<Key, Key, compare>	*ret;
 				if (num_of_ele == 0)
 				{
 					num_of_ele++;
-					root = new node<Key, Key, Compare>(x, x);
+					root = new node<Key, Key, compare>(x, x);
 					setSV();
 					return (pair<iterator, bool>(iterator(root, svr), true));
 				}
@@ -200,10 +200,10 @@ namespace ft
 				}
 
 			}
-			
+
 			void					swap(set &x)
 			{
-				node<key_type, value_type, Compare>	*tmp = root;
+				node<key_type, value_type, compare>	*tmp = root;
 				root = x.root;
 				x.root = tmp;
 
@@ -245,32 +245,50 @@ namespace ft
 
 			iterator		lower_bound(const key_type &key)
 			{
-				if (num_of_ele == 0)
-					return (iterator(NULL, svr));
-				return (iterator(root->getLowerBound(root, key), svr));
+				iterator	it = this->begin();
+
+				for (; it != end(); it++)
+				{
+					if (key <= *it)
+						return (it);
+				}
+				return (it);
 			}
 
 			const_iterator	lower_bound(const key_type &key) const
 			{
-				if (num_of_ele == 0)
-					return (const_iterator(NULL, svr));
-				else
-					return (const_iterator(root->getLowerBound(root, key), svr));
+				const_iterator	it = begin();
+
+				for (; it != end(); it++)
+				{
+					if (key <= *it)
+						return (it);
+				}
+				return (it);
 			}
 
 			iterator		upper_bound(const key_type &key)
 			{
-				if (num_of_ele == 0)
-					return (iterator(NULL, svr));
-				return (iterator(root->getUpperBound(root, key), svr));
+				iterator	it = this->begin();
+
+				for (; it != end(); it++)
+				{
+					if (key < *it)
+						return (it);
+				}
+				return (it);
 			}
 
 			const_iterator	upper_bound(const key_type &key) const
 			{
-				if (num_of_ele == 0)
-					return (const_iterator(NULL, svr));
-				else
-					return (const_iterator(root->getUpperBound(root, key), svr));
+				const_iterator	it = this->begin();
+
+				for (; it != end(); it++)
+				{
+					if (key < *it)
+						return (it);
+				}
+				return (it);
 			}
 
 			pair<iterator, iterator>				equal_range(const key_type &key)
@@ -293,44 +311,44 @@ namespace ft
 			}
 	};
 
-	template < class Key, class Compare, class Alloc >
-	bool	operator==(const set<Key, Compare, Alloc> &lhs, const set<Key, Compare, Alloc> &rhs)
+	template < class Key, class compare, class Alloc >
+	bool	operator==(const set<Key, compare, Alloc> &lhs, const set<Key, compare, Alloc> &rhs)
 	{
 		return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 
-	template < class Key, class Compare, class Alloc >
-	bool	operator!=(const set<Key, Compare, Alloc> &lhs, const set<Key, Compare, Alloc> &rhs)
+	template < class Key, class compare, class Alloc >
+	bool	operator!=(const set<Key, compare, Alloc> &lhs, const set<Key, compare, Alloc> &rhs)
 	{
 		return (!(lhs == rhs));
 	}
 
-	template < class Key, class Compare, class Alloc >
-	bool	operator<(const set<Key, Compare, Alloc> &lhs, const set<Key, Compare, Alloc> &rhs)
+	template < class Key, class compare, class Alloc >
+	bool	operator<(const set<Key, compare, Alloc> &lhs, const set<Key, compare, Alloc> &rhs)
 	{
 		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 
-	template < class Key, class Compare, class Alloc >
-	bool	operator>(const set<Key, Compare, Alloc>& lhs, const set<Key, Compare, Alloc>& rhs )
+	template < class Key, class compare, class Alloc >
+	bool	operator>(const set<Key, compare, Alloc>& lhs, const set<Key, compare, Alloc>& rhs )
 	{
 		return (rhs < lhs);
 	}
 
-	template < class Key, class Compare, class Alloc >
-	bool	operator<=(const set<Key, Compare, Alloc> &lhs, const set<Key, Compare, Alloc> &rhs)
+	template < class Key, class compare, class Alloc >
+	bool	operator<=(const set<Key, compare, Alloc> &lhs, const set<Key, compare, Alloc> &rhs)
 	{
 		return (!(lhs > rhs));
 	}
 
-	template < class Key, class Compare, class Alloc >
-	bool	operator>=(const set<Key, Compare, Alloc> &lhs, const set<Key, Compare, Alloc> &rhs)
+	template < class Key, class compare, class Alloc >
+	bool	operator>=(const set<Key, compare, Alloc> &lhs, const set<Key, compare, Alloc> &rhs)
 	{
 		return (!(lhs < rhs));
 	}
 
-	template < class Key, class Compare, class Alloc >
-	void swap(set< Key, Compare, Alloc >& x, set< Key, Compare, Alloc >& y)
+	template < class Key, class compare, class Alloc >
+	void swap(set< Key, compare, Alloc >& x, set< Key, compare, Alloc >& y)
 	{
 	  x.swap(y);
 	}

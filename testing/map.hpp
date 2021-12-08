@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/12/01 15:10:25 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/08 16:15:24 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -296,32 +296,45 @@ namespace ft
 			// lower_bound, upper_bound에 대해 좀 더 알아볼 것!
 			iterator		lower_bound(const key_type &key)
 			{
-				if (num_of_ele == 0)
-					return (iterator(NULL, svr));
-				return (iterator(root->getLowerBound(root, key), svr));
+				// if (num_of_ele == 0)
+				// 	return (iterator(NULL, svr));
+				// return (iterator(root->getLowerBound(root, key), svr));
+				iterator it = begin();
+
+				for (; it != end(); ++it)
+					if (key <= it->first)
+						break;
+				return it;
 			}
 
 			const_iterator	lower_bound(const key_type &key) const
 			{
-				if (num_of_ele == 0)
-					return (const_iterator(NULL, svr));
-				else
-					return (const_iterator(root->getLowerBound(root, key), svr));
+				const_iterator it = begin();
+
+				for (; it != end(); ++it)
+					if (key <= it->first)
+						break;
+				return it;
 			}
 
 			iterator		upper_bound(const key_type &key)
 			{
-				if (num_of_ele == 0)
-					return (iterator(NULL, svr));
-				return (iterator(root->getUpperBound(root, key), svr));
+				iterator it = begin();
+
+				for (; it != end(); ++it)
+					if (key < it->first)
+						break;
+				return it;
 			}
 
 			const_iterator	upper_bound(const key_type &key) const
 			{
-				if (num_of_ele == 0)
-					return (const_iterator(NULL, svr));
-				else
-					return (const_iterator(root->getUpperBound(root, key), svr));
+				const_iterator it = begin();
+
+				for (; it != end(); ++it)
+					if (key < it->first)
+						break;
+				return it;
 			}
 
 			pair<iterator, iterator>				equal_range(const key_type &key)
@@ -334,51 +347,54 @@ namespace ft
 				return (pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key)));
 			}
 
+			Alloc	get_allocator() const { return (Alloc()); }
+
 			void	nodePrint(void)
 			{
 				root->tree_print(root, "", true);
 			}
 	};
 
-	template< class Key, class T, class Compare, class Alloc>
+	template < class Key, class T, class Compare, class Alloc >
 	bool	operator==(const map<Key, T, Compare, Alloc> &lhs, const map<Key,T,Compare,Alloc> &rhs)
 	{
 		return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 
-	template< class Key, class T, class Compare, class Alloc>
+	template < class Key, class T, class Compare, class Alloc >
 	bool	operator!=(const map<Key, T, Compare, Alloc> &lhs, const map<Key,T,Compare,Alloc> &rhs)
 	{
 		return (!(lhs == rhs));
 	}
 
-	template< class Key, class T, class Compare, class Alloc>
+	template < class Key, class T, class Compare, class Alloc >
 	bool	operator<(const map<Key, T, Compare, Alloc> &lhs, const map<Key,T,Compare,Alloc> &rhs)
 	{
 		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 
-	template< class Key, class T, class Compare, class Alloc>
+	template < class Key, class T, class Compare, class Alloc >
 	bool	operator>(const map<Key, T, Compare, Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs )
 	{
 		return (rhs < lhs);
 	}
 
-	template< class Key, class T, class Compare, class Alloc>
+	template < class Key, class T, class Compare, class Alloc >
 	bool	operator<=(const map<Key, T, Compare, Alloc> &lhs, const map<Key,T,Compare,Alloc> &rhs)
 	{
 		return (!(lhs > rhs));
 	}
 
-	template< class Key, class T, class Compare, class Alloc>
+	template < class Key, class T, class Compare, class Alloc >
 	bool	operator>=(const map<Key, T, Compare, Alloc> &lhs, const map<Key,T,Compare,Alloc> &rhs)
 	{
 		return (!(lhs < rhs));
 	}
 
 	template < class Key, class T, class Compare, class Alloc >
-	void swap(map< Key, T, Compare, Alloc >& x, map< Key, T, Compare, Alloc >& y) {
-		x.swap(y);
+	void swap(map< Key, T, Compare, Alloc >& x, map< Key, T, Compare, Alloc >& y)
+	{
+	  x.swap(y);
 	}
 }
 

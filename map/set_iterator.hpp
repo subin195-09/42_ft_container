@@ -1,5 +1,17 @@
-#ifndef MAP_ITERATOR_HPP
-# define MAP_ITERATOR_HPP
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   set_iterator.hpp                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/08 16:36:50 by skim              #+#    #+#             */
+/*   Updated: 2021/12/08 16:36:51 by skim             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef SET_ITERATOR_HPP
+# define SET_ITERATOR_HPP
 
 # include "red_black.hpp"
 # include "../utils.hpp"

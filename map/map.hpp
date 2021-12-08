@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/12/01 14:01:09 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/08 16:15:10 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -296,32 +296,45 @@ namespace ft
 			// lower_bound, upper_bound에 대해 좀 더 알아볼 것!
 			iterator		lower_bound(const key_type &key)
 			{
-				if (num_of_ele == 0)
-					return (iterator(NULL, svr));
-				return (iterator(root->getLowerBound(root, key), svr));
+				// if (num_of_ele == 0)
+				// 	return (iterator(NULL, svr));
+				// return (iterator(root->getLowerBound(root, key), svr));
+				iterator it = begin();
+
+				for (; it != end(); ++it)
+					if (key <= it->first)
+						break;
+				return it;
 			}
 
 			const_iterator	lower_bound(const key_type &key) const
 			{
-				if (num_of_ele == 0)
-					return (const_iterator(NULL, svr));
-				else
-					return (const_iterator(root->getLowerBound(root, key), svr));
+				const_iterator it = begin();
+
+				for (; it != end(); ++it)
+					if (key <= it->first)
+						break;
+				return it;
 			}
 
 			iterator		upper_bound(const key_type &key)
 			{
-				if (num_of_ele == 0)
-					return (iterator(NULL, svr));
-				return (iterator(root->getUpperBound(root, key), svr));
+				iterator it = begin();
+
+				for (; it != end(); ++it)
+					if (key < it->first)
+						break;
+				return it;
 			}
 
 			const_iterator	upper_bound(const key_type &key) const
 			{
-				if (num_of_ele == 0)
-					return (const_iterator(NULL, svr));
-				else
-					return (const_iterator(root->getUpperBound(root, key), svr));
+				const_iterator it = begin();
+
+				for (; it != end(); ++it)
+					if (key < it->first)
+						break;
+				return it;
 			}
 
 			pair<iterator, iterator>				equal_range(const key_type &key)
@@ -335,7 +348,7 @@ namespace ft
 			}
 
 			Alloc	get_allocator() const { return (Alloc()); }
-			
+
 			void	nodePrint(void)
 			{
 				root->tree_print(root, "", true);

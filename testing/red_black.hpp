@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/29 18:57:06 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/08 16:37:35 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,51 +285,6 @@ namespace ft
 						return (child);
 					}
 					return (mergeInsert(root->left, k, v));
-				}
-			}
-
-			// getLowerBound, getUpperBound(key 보다 큰값중 가장 작은 값)
-			// key보다 큰 값 중 제일 제일 작은 값
-			node<Key, T, Compare>	*getUpperBound(node<Key, T, Compare> *root, const Key &key)
-			{
-				if (!cmp(key, root->ip.first)) // first <= key
-				{
-					if (root->right == NULL)
-					{
-						if (root->parent->ip.first < root->ip.first)
-							return (NULL);
-						return (root->parent);
-					}
-					else
-						return (getUpperBound(root->right, key));
-				}
-				else
-				{
-					if (root->left == NULL)
-						return (root);
-					else
-						return (getUpperBound(root->left, key));
-				}
-			}
-
-			// key보다 크거나 같은 값 중 제일 제일 작은 값 (upperbound에서 same을 비교하는 로직만 추가)
-			node<Key, T, Compare>	*getLowerBound(node<Key, T, Compare> *root, const Key &key)
-			{
-				if (root->ip.first == key)
-					return (root);
-				if (cmp(root->ip.first, key)) // first < key
-				{
-					if (root->right == NULL)
-						return (NULL);
-					else
-						return (getLowerBound(root->right, key));
-				}
-				else
-				{
-					if (root->left == NULL || cmp(root->left->ip.first, key))
-						return (root);
-					else
-						return (getLowerBound(root->left, key));
 				}
 			}
 
