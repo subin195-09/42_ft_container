@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/12/08 16:15:10 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/16 15:50:24 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ namespace ft
 			typedef const value_type							*const_pointer;
 			typedef ptrdiff_t									difference_type;
 			typedef size_t										size_type;
-			// map_iterator 구현해서 대체할 것
 			typedef mapIterator<Key, T, Compare>				iterator;
 			typedef mapConstIterator<Key, T, Compare>			const_iterator;
 			typedef mapReverseIterator<Key, T, Compare>			reverse_iterator;
