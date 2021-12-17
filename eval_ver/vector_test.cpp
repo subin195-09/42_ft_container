@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 14:37:03 by skim              #+#    #+#             */
-/*   Updated: 2021/12/18 01:43:37 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/18 02:07:07 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,5 +252,5 @@ int main() {
   std::cout << "operator >=" << std::endl;
   std::cout << ((v_lhs >= v_rhs) ? "OK" : "KO") << std::endl;
 
-  // system("leaks vTest");
+  // system("leaks vector_test");
 }
