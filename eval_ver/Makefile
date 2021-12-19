@@ -6,7 +6,7 @@
 #    By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/16 14:36:54 by skim              #+#    #+#              #
-#    Updated: 2021/12/18 02:04:46 by skim             ###   ########.fr        #
+#    Updated: 2021/12/19 17:05:51 by skim             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -70,6 +70,9 @@ time_unit :
 	@time ./$(FT_NAMESPACE)_$(TARGET) > ./logs/$(FT_NAMESPACE)_$(TARGET).log
 	@printf "time 'STD'"
 	@time ./$(STD_NAMESPACE)_$(TARGET) > ./logs/$(STD_NAMESPACE)_$(TARGET).log
+
+mil_test :
+	@cd ./containers_test && ./do.sh
 
 clean :
 	@rm -d -rf logs
