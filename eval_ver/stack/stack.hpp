@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 17:23:40 by skim              #+#    #+#             */
-/*   Updated: 2021/11/06 17:43:45 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/19 18:09:34 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ namespace ft
 		public:
 			explicit stack(const container_type &ctnr = container_type()) : c(ctnr) {}
 			stack(const stack &other) : c(other.c) {}
-			// copy constructor에 대해 좀 더 연구해 볼 것
 			stack &operator=(const stack &other)
 			{
 				c = other.c;

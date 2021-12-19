@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/24 19:41:05 by skim              #+#    #+#             */
-/*   Updated: 2021/11/12 16:24:58 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/19 18:34:03 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,21 +28,20 @@ namespace ft
 			T		*arr;
 			size_t	num_of_element;
 			size_t	cap;
+			Alloc	_alloc;
 
 			void	expand(unsigned int to_size)
 			{
 				if (num_of_element >= to_size)
 					return ;
 
-				Alloc alloc;
-
-				T	*temp = alloc.allocate(to_size);
+				T	*temp = _alloc.allocate(to_size);
 				if (num_of_element > 0)
 				{
 					for (size_t i = 0; i < num_of_element; i++)
-						alloc.construct(temp + i, *(arr + i));
-					alloc.destroy(arr);
-					alloc.deallocate(arr, num_of_element);
+						_alloc.construct(temp + i, *(arr + i));
+					_alloc.destroy(arr);
+					_alloc.deallocate(arr, num_of_element);
 				}
 				cap = to_size;
 				arr = temp;
@@ -55,17 +54,15 @@ namespace ft
 
 			void	setValue(T *pos, const T &val)
 			{
-				Alloc alloc;
-				alloc.construct(pos, val);
+				_alloc.construct(pos, val);
 			}
 
 			void	shift(T *pos, unsigned int shift_size)
 			{
-				Alloc			alloc;
 				unsigned int	i = getIdxFromPtr(pos);
 
 				if (shift_size + num_of_element >= cap)
-					expand((num_of_element + shift_size) * 2);
+					expand(num_of_element + (shift_size * 2));
 				for (unsigned int j = 0; j < num_of_element - i; j++)
 					setValue(arr + num_of_element - 1 + shift_size - j, *(arr + num_of_element - 1 - j));
 			}
@@ -78,14 +75,6 @@ namespace ft
 					setValue(arr + i, *(arr + i + shift_size));
 				num_of_element -= shift_size;
 			}
-
-			// class	OutOfRangeException : public std::exception
-			// {
-			// 	virtual const char	*what() const throw()
-			// 	{
-			// 		return ("Out Of Range");
-			// 	}
-			// };
 
 		public :
 			typedef ptrdiff_t									difference_type;
@@ -103,47 +92,37 @@ namespace ft
 			typedef vectorReverseIterator<T>					reverse_iterator;
 			typedef vectorReverseConstIterator<T>				const_reverse_iterator;
 
-			/** constructor **/
-			// default constructor
-			// explicit : 자동 형변환을 막기 위함
 			explicit vector (const allocator_type& alloc = allocator_type()) : arr(NULL), num_of_element(0), cap(0)
 			{
 				(void)alloc;
-				// cap = 42, arr를 42개를 할당한 것으로 초기화
-				expand(42);
+				expand(10);
 			}
 
-			// fill constructor
 			explicit vector (size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) : arr(NULL), num_of_element(0), cap(0)
 			{
 				(void)alloc;
-				expand(42);
+				expand(10);
 				for (size_type i = 0; i < n; i++)
 					push_back(val);
 			}
 
-			// range constructor
-			// iterator를 구현 후 좀 더 공부해 볼 것
-			// 참고 자료: https://github.com/pearan2/ft_containers/wiki/4.-template-%ED%95%A8%EC%88%98-(%ED%81%B4%EB%A0%88%EC%8A%A4%EB%82%B4%EB%B6%80%EC%97%90%EC%84%9C%EC%9D%98-%EB%A9%94%EC%86%8C%EB%93%9C)-%EC%97%90%EC%84%9C-%EC%96%B4%EB%8A%90%ED%95%A8%EC%88%98%EB%A5%BC-%EC%8B%A4%ED%96%89%ED%95%B4%EC%95%BC-%ED%95%A0%EC%A7%80-%EB%AA%A8%ED%98%B8%ED%95%A0%EB%95%8C
 			template <class InputIterator>
          	vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type dummy = 0) : arr(NULL), num_of_element(0), cap(0)
 			{
 				(void)alloc;
 				dummy = 0;
-				expand(42);
+				expand(10);
 				for (InputIterator it = first; it != last; it++)
 					push_back(*it);
 			}
 
-			// copy constructor
 			vector (const vector &x)
 			: arr(NULL), num_of_element(0), cap(0)
 			{
-				expand(7);
+				expand(10);
 				insert(begin(), x.begin(), x.end());
 			}
 
-			/** = assign operator **/
 			vector<T>	&operator= (const vector &x)
 			{
 				clear();
@@ -151,16 +130,12 @@ namespace ft
 				return (*this);
 			}
 
-			/** destructor **/
 			~vector()
 			{
-				Alloc alloc;
-
-				alloc.destroy(arr);
-				alloc.deallocate(arr, cap);
+				_alloc.destroy(arr);
+				_alloc.deallocate(arr, cap);
 			}
 
-			/** iterator **/
 			iterator				begin()
 			{
 				return (iterator(arr));
@@ -209,7 +184,7 @@ namespace ft
 
 			size_type	max_size() const
 			{
-				return (Alloc().max_size());
+				return (_alloc.max_size());
 			}
 
 			void		resize(size_type n, value_type val = value_type())
@@ -325,7 +300,6 @@ namespace ft
 				num_of_element += n;
 			}
 
-			// range constructor와 함께 공부할 것
 			template <class InputIterator>
 			void		insert \
 			(iterator position, InputIterator first, InputIterator last, \
@@ -413,7 +387,6 @@ namespace ft
 	{
 		if (lhs.size() != rhs.size())
 			return (false);
-		// utils.hpp에서 구현해야함
 		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 
@@ -426,7 +399,6 @@ namespace ft
 	template <class T, class Alloc>
 	bool	operator< (const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
 	{
-		// utils.hpp에서 구현해야함
 		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 

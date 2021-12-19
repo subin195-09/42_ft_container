@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/11/29 18:57:06 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/19 18:40:20 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -366,6 +366,8 @@ namespace ft
 				{
 					_parent->color = BLACK;
 					sibling->color = RED;
+					delete nil;
+					nil = NULL;
 					return (true);
 				}
 				// case 2, case 3
@@ -392,6 +394,8 @@ namespace ft
 								rotateLeft(_parent);
 							}
 						}
+						delete nil;
+						nil = NULL;
 						return (true);
 					}
 					else if (_parent->right == target)
@@ -412,9 +416,13 @@ namespace ft
 								rotateLeft(sibling);
 							}
 						}
+						delete nil;
+						nil = NULL;
 						return (true);
 					}
 				}
+				delete nil;
+				nil = NULL;
 				return (false);
 			}
 
@@ -426,7 +434,11 @@ namespace ft
 				node<Key, T, Compare>	*sibling_right = sibling->right == NULL ? nil : sibling->right;
 
 				if (erase_fix_up_re(target, _parent))
+				{
+					delete nil;
+					nil = NULL;
 					return ;
+				}
 				// case 4 (all black)
 				else if (!(_parent->color || sibling->color || sibling_left->color || sibling_right->color))
 				{
@@ -445,6 +457,8 @@ namespace ft
 						rotateRight(_parent);
 					erase_fix_up_re(target, _parent);
 				}
+				delete nil;
+				nil = NULL;
 			}
 
 			void					deleteNode(node<Key, T, Compare> **real_root, node<Key, T, Compare> *target, const Key& key)
@@ -522,6 +536,8 @@ namespace ft
 					deleteNode(real_root, target->left, key);
 				else if (cmp(target->ip.first, key))
 					deleteNode(real_root, target->right, key);
+				delete nil;
+				nil = NULL;
 			}
 
 			// getter

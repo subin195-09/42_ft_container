@@ -6,7 +6,7 @@
 #    By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/16 14:36:54 by skim              #+#    #+#              #
-#    Updated: 2021/12/19 17:05:51 by skim             ###   ########.fr        #
+#    Updated: 2021/12/19 18:37:44 by skim             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,7 +48,7 @@ map_test :
 	@./$(FT_NAMESPACE)_$(MAP) > logs/$(FT_NAMESPACE)_$(MAP).log
 	@$(CC) $(CFLAGS) -std=c++98 map_test.cpp -o $(STD_NAMESPACE)_$(MAP) -DTESTED_FT_NAMESPACE=$(STD_NAMESPACE)
 	@./$(STD_NAMESPACE)_$(MAP) > logs/$(STD_NAMESPACE)_$(MAP).log
-	@diff logs/$(FT_NAMESPACE)_$(MAP).log logs/$(FT_NAMESPACE)_$(MAP).log
+	# @diff logs/$(FT_NAMESPACE)_$(MAP).log logs/$(FT_NAMESPACE)_$(MAP).log
 
 set_test :
 	@mkdir -p logs
