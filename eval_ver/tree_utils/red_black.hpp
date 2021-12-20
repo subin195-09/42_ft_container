@@ -6,13 +6,15 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/12/19 18:40:20 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/20 15:59:41 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RED_BLACK_HPP
 # define RED_BLACK_HPP
 
+#include <iostream>
+#include <memory>
 #include "pair.hpp"
 #include "../utils/utils.hpp"
 
@@ -24,12 +26,16 @@ namespace ft
 	template <typename Key, typename T, class Compare = ft::less<Key> >
 	class node
 	{
+		public:
+			typedef node<Key, T, Compare>		node_type;
+			typedef std::allocator<node_type>	allocator_type;
 		private:
-			node	*parent;
-			node	*left;
-			node	*right;
-			bool	color;
-			Compare	cmp;
+			node			*parent;
+			node			*left;
+			node			*right;
+			bool			color;
+			Compare			cmp;
+			allocator_type	alloc;
 
 			void	trans(node<Key, T, Compare> *target, node<Key, T, Compare> *newNode)
 			{
@@ -177,7 +183,9 @@ namespace ft
 					deleteAll(root->left);
 				if (root->right != NULL)
 					deleteAll(root->right);
-				delete(root);
+				alloc.destroy(root);
+				alloc.deallocate(root, 1);
+				// delete(root);
 			}
 
 			// find []operator

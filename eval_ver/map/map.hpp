@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/12/16 15:50:24 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/20 15:54:57 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,28 +26,44 @@ namespace ft
 	class map
 	{
 		public:
-			typedef Key											key_type;
-			typedef T											mapped_type;
-			typedef pair<const Key, T>							value_type;
-			typedef Compare										key_compare;
-			typedef Alloc										allocator_type;
-			typedef value_type									&reference;
-			typedef const value_type							&const_reference;
-			typedef value_type									*pointer;
-			typedef const value_type							*const_pointer;
-			typedef ptrdiff_t									difference_type;
-			typedef size_t										size_type;
-			typedef mapIterator<Key, T, Compare>				iterator;
-			typedef mapConstIterator<Key, T, Compare>			const_iterator;
-			typedef mapReverseIterator<Key, T, Compare>			reverse_iterator;
-			typedef mapReverseConstIterator<Key, T, Compare>	const_reverse_iterator;
+			typedef Key													key_type;
+			typedef T													mapped_type;
+			typedef pair<const Key, T>									value_type;
+			typedef Compare												key_compare;
+			typedef node<Key, T, Compare>								node_type;
+			typedef Alloc												allocator_type;
+			typedef typename Alloc::template rebind<node_type>::other	node_allocator_type;
+			typedef value_type											&reference;
+			typedef const value_type									&const_reference;
+			typedef value_type											*pointer;
+			typedef const value_type									*const_pointer;
+			typedef ptrdiff_t											difference_type;
+			typedef size_t												size_type;
+			typedef mapIterator<Key, T, Compare>						iterator;
+			typedef mapConstIterator<Key, T, Compare>					const_iterator;
+			typedef mapReverseIterator<Key, T, Compare>					reverse_iterator;
+			typedef mapReverseConstIterator<Key, T, Compare>			const_reverse_iterator;
 
 		private:
 			node<Key, T, Compare>	*root;
 			saver<Key, T, Compare>	*svr;
 			unsigned int			num_of_ele;
+			node_allocator_type		node_alloc;
 
 			void	setSV() { svr->root = root; }
+
+			void deleteAll(node<Key, T, Compare> *root)
+			{
+				if (root == NULL)
+					return ;
+				if (root->getLeft() != NULL)
+					deleteAll(root->getLeft());
+				if (root->getRight() != NULL)
+					deleteAll(root->getRight());
+				node_alloc.destroy(root);
+				node_alloc.deallocate(root, 1);
+				// delete(root);
+			}
 
 		public:
 			class value_compare
@@ -94,8 +110,11 @@ namespace ft
 			// copy constructor
 			map (const map &x) : root(NULL), num_of_ele(0)
 			{
-				root = new node<Key, T, Compare>(*(x.root));
+				root = node_alloc.allocate(1);
+				node_alloc.construct(root, node<Key, T, Compare>(*(x.root)));
 				num_of_ele = x.num_of_ele;
+				std::cout << "@@@@x.root : " << (x.root)->ip.first << std::endl;
+				std::cout << "@@@@root : " << root->ip.first << std::endl;
 				svr = new ft::saver<Key, T, Compare>();
 				setSV();
 			}
@@ -103,8 +122,9 @@ namespace ft
 			// =operator
 			map<Key, T, Compare, Alloc>	&operator=(const map<Key, T, Compare, Alloc> &x)
 			{
-				root->deleteAll(root);
-				root = new node<Key, T, Compare>(*(x.root));
+				this->deleteAll(root);
+				root = node_alloc.allocate(1);
+				node_alloc.construct(root, node<Key, T, Compare>(*(x.root)));
 				num_of_ele = x.num_of_ele;
 				setSV();
 				return (*this);
@@ -113,7 +133,7 @@ namespace ft
 			~map()
 			{
 				if (num_of_ele > 0)
-					root->deleteAll(root);
+					this->deleteAll(root);
 				delete (svr);
 			}
 
@@ -139,7 +159,8 @@ namespace ft
 				if (num_of_ele == 0)
 				{
 					num_of_ele++;
-					root = new node<Key, T, Compare>(key);
+					root = node_alloc.allocate(1);
+					node_alloc.construct(root, node<Key, T, Compare>(key));
 					setSV();
 					return (root->ip.second);
 				}
@@ -168,7 +189,8 @@ namespace ft
 				if (num_of_ele == 0)
 				{
 					num_of_ele++;
-					root = new node<Key, T, Compare>(x.first, x.second);
+					root = node_alloc.allocate(1);
+					node_alloc.construct(root, node<Key, T, Compare>(x.first, x.second));
 					setSV();
 					return (pair<iterator, bool>(iterator(root, svr), true));
 				}
@@ -262,7 +284,7 @@ namespace ft
 				if (num_of_ele == 0)
 					return ;
 				num_of_ele = 0;
-				root->deleteAll(root);
+				this->deleteAll(root);
 				root = NULL;
 			}
 
