@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/12/21 15:24:35 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/21 16:25:20 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,22 +150,6 @@ namespace ft
 				newNode->right = target;
 			}
 
-			node<Key, T, Compare>	*newNode(const Key k, T v)
-			{
-				node<Key, T, Compare>	*newOne;
-
-				newOne = alloc.allocate(1);
-				newOne->ip = pair<const Key, T>(k, v);
-				return (newOne);
-			}
-
-			void					dealloNode(node<Key, T, Compare> *target)
-			{
-				alloc.destroy(target);
-				alloc.deallocate(target, 1);
-			}
-
-
 		public:
 			pair<const Key, T>	ip;
 
@@ -190,6 +174,18 @@ namespace ft
 
 			~node() {}
 
+			node<Key, T, Compare>	*newNode(const Key k, T v)
+			{
+				node<Key, T, Compare>	*newOne = new node<Key, T, Compare>(k, v);
+				return (newOne);
+			}
+
+			node<Key, T, Compare>	*newNode(const node<Key, T, Compare> &origin)
+			{
+				node<Key, T, Compare>	*newOne = new node<Key, T, Compare>(origin);
+				return (newOne);
+			}
+
 			node<Key, T, Compare>	*getRoot(node<Key, T, Compare> *root)
 			{
 				if (root->parent == NULL)
@@ -205,9 +201,7 @@ namespace ft
 					deleteAll(root->left);
 				if (root->right != NULL)
 					deleteAll(root->right);
-				// alloc.destroy(root);
-				// alloc.deallocate(root, 1);
-				dealloNode(root);
+				delete root;
 			}
 
 			// find []operator
@@ -518,7 +512,7 @@ namespace ft
 						else
 							newNode->color = target->color;
 						trans(target, newNode);
-						dealloNode(target);
+						delete (target);
 						if (checker)
 							erase_fix_up(newNode->left, newNode);
 					}
@@ -539,7 +533,7 @@ namespace ft
 						else
 							newNode->color = target->color;
 						trans(target, newNode);
-						dealloNode(target);
+						delete (target);
 						if (checker)
 							erase_fix_up(newNode->right, newNode);
 					}
@@ -616,6 +610,12 @@ namespace ft
 				if (this != &other)
 					this->root = other.root;
 				return (*this);
+			}
+
+			saver<Key, T, Compare>	*newSaver(void)
+			{
+				saver<Key, T, Compare> *newOne = new saver<Key, T, Compare>();
+				return (newOne);
 			}
 	};
 }

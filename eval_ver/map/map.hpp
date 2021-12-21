@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/12/21 15:26:32 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/21 16:21:32 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ namespace ft
 			{
 				(void)comp;
 				(void)alloc;
-				svr = new ft::saver<Key, T, Compare>();
+				// svr = new ft::saver<Key, T, Compare>();
+				svr = svr->newSaver();
 			}
 			// range constructor
 			template <class InputIterator>
@@ -90,15 +91,19 @@ namespace ft
 			{
 				(void)comp;
 				(void)alloc;
-				svr = new ft::saver<Key, T, Compare>();
+				// svr = new ft::saver<Key, T, Compare>();
+				svr = svr->newSaver();
 				insert(first, last);
 			}
 			// copy constructor
 			map (const map &x) : root(NULL), num_of_ele(0)
 			{
-				root = new node<Key, T, Compare>(*(x.root));
+				// root = new node<Key, T, Compare>(*(x.root));
+				root = root->newNode(*(x.root));
+				// root = root->newNode(x.root->ip.first, x.root->ip.second);
 				num_of_ele = x.num_of_ele;
-				svr = new ft::saver<Key, T, Compare>();
+				// svr = new ft::saver<Key, T, Compare>();
+				svr = svr->newSaver();
 				setSV();
 			}
 
@@ -106,7 +111,9 @@ namespace ft
 			map<Key, T, Compare, Alloc>	&operator=(const map<Key, T, Compare, Alloc> &x)
 			{
 				root->deleteAll(root);
-				root = new node<Key, T, Compare>(*(x.root));
+				// root = root->newNode(x.root->ip.first, x.root->ip.second);
+				// root = new node<Key, T, Compare>(*(x.root));
+				root = root->newNode(*(x.root));
 				num_of_ele = x.num_of_ele;
 				setSV();
 				return (*this);
@@ -141,7 +148,8 @@ namespace ft
 				if (num_of_ele == 0)
 				{
 					num_of_ele++;
-					root = new node<Key, T, Compare>(key);
+					// root = new node<Key, T, Compare>(key);
+					root = root->newNode(key, mapped_type());
 					setSV();
 					return (root->ip.second);
 				}
@@ -170,7 +178,8 @@ namespace ft
 				if (num_of_ele == 0)
 				{
 					num_of_ele++;
-					root = new node<Key, T, Compare>(x.first, x.second);
+					// root = new node<Key, T, Compare>(x.first, x.second);
+					root = root->newNode(x.first, x.second);
 					setSV();
 					return (pair<iterator, bool>(iterator(root, svr), true));
 				}
