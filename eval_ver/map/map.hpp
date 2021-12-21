@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/12/20 15:54:57 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/21 15:26:32 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,22 +48,8 @@ namespace ft
 			node<Key, T, Compare>	*root;
 			saver<Key, T, Compare>	*svr;
 			unsigned int			num_of_ele;
-			node_allocator_type		node_alloc;
 
 			void	setSV() { svr->root = root; }
-
-			void deleteAll(node<Key, T, Compare> *root)
-			{
-				if (root == NULL)
-					return ;
-				if (root->getLeft() != NULL)
-					deleteAll(root->getLeft());
-				if (root->getRight() != NULL)
-					deleteAll(root->getRight());
-				node_alloc.destroy(root);
-				node_alloc.deallocate(root, 1);
-				// delete(root);
-			}
 
 		public:
 			class value_compare
@@ -110,11 +96,8 @@ namespace ft
 			// copy constructor
 			map (const map &x) : root(NULL), num_of_ele(0)
 			{
-				root = node_alloc.allocate(1);
-				node_alloc.construct(root, node<Key, T, Compare>(*(x.root)));
+				root = new node<Key, T, Compare>(*(x.root));
 				num_of_ele = x.num_of_ele;
-				std::cout << "@@@@x.root : " << (x.root)->ip.first << std::endl;
-				std::cout << "@@@@root : " << root->ip.first << std::endl;
 				svr = new ft::saver<Key, T, Compare>();
 				setSV();
 			}
@@ -122,9 +105,8 @@ namespace ft
 			// =operator
 			map<Key, T, Compare, Alloc>	&operator=(const map<Key, T, Compare, Alloc> &x)
 			{
-				this->deleteAll(root);
-				root = node_alloc.allocate(1);
-				node_alloc.construct(root, node<Key, T, Compare>(*(x.root)));
+				root->deleteAll(root);
+				root = new node<Key, T, Compare>(*(x.root));
 				num_of_ele = x.num_of_ele;
 				setSV();
 				return (*this);
@@ -133,7 +115,7 @@ namespace ft
 			~map()
 			{
 				if (num_of_ele > 0)
-					this->deleteAll(root);
+					root->deleteAll(root);
 				delete (svr);
 			}
 
@@ -159,8 +141,7 @@ namespace ft
 				if (num_of_ele == 0)
 				{
 					num_of_ele++;
-					root = node_alloc.allocate(1);
-					node_alloc.construct(root, node<Key, T, Compare>(key));
+					root = new node<Key, T, Compare>(key);
 					setSV();
 					return (root->ip.second);
 				}
@@ -189,8 +170,7 @@ namespace ft
 				if (num_of_ele == 0)
 				{
 					num_of_ele++;
-					root = node_alloc.allocate(1);
-					node_alloc.construct(root, node<Key, T, Compare>(x.first, x.second));
+					root = new node<Key, T, Compare>(x.first, x.second);
 					setSV();
 					return (pair<iterator, bool>(iterator(root, svr), true));
 				}
@@ -284,7 +264,7 @@ namespace ft
 				if (num_of_ele == 0)
 					return ;
 				num_of_ele = 0;
-				this->deleteAll(root);
+				root->deleteAll(root);
 				root = NULL;
 			}
 

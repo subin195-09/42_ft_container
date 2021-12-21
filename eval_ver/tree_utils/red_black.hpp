@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:48 by skim              #+#    #+#             */
-/*   Updated: 2021/12/20 15:59:41 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/21 15:24:35 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,22 @@ namespace ft
 				newNode->right = target;
 			}
 
+			node<Key, T, Compare>	*newNode(const Key k, T v)
+			{
+				node<Key, T, Compare>	*newOne;
+
+				newOne = alloc.allocate(1);
+				newOne->ip = pair<const Key, T>(k, v);
+				return (newOne);
+			}
+
+			void					dealloNode(node<Key, T, Compare> *target)
+			{
+				alloc.destroy(target);
+				alloc.deallocate(target, 1);
+			}
+
+
 		public:
 			pair<const Key, T>	ip;
 
@@ -161,9 +177,15 @@ namespace ft
 			node(const node<Key, T, Compare> &origin, node<Key, T, Compare> *parent = NULL) : parent(parent), left(NULL), right(NULL), ip(origin.ip)
 			{
 				if (origin.left != NULL)
+				{
+					// left = newNode(origin.left->ip.first, origin.left->ip.second);
 					left = new node<Key, T, Compare>(*origin.left, this);
+				}
 				if (origin.right != NULL)
+				{
+					// right = newNode(origin.right->ip.first, origin.right->ip.second);
 					right = new node<Key, T, Compare>(*origin.right, this);
+				}
 			}
 
 			~node() {}
@@ -183,9 +205,9 @@ namespace ft
 					deleteAll(root->left);
 				if (root->right != NULL)
 					deleteAll(root->right);
-				alloc.destroy(root);
-				alloc.deallocate(root, 1);
-				// delete(root);
+				// alloc.destroy(root);
+				// alloc.deallocate(root, 1);
+				dealloNode(root);
 			}
 
 			// find []operator
@@ -269,6 +291,7 @@ namespace ft
 					if (root->right == NULL)
 					{
 						child = new node<Key, T, Compare>(k, v);
+						// child = newNode(k, v);
 						root->right = child;
 						child->parent = root;
 						child->left = NULL;
@@ -284,6 +307,7 @@ namespace ft
 					if (root->left == NULL)
 					{
 						child = new node<Key, T, Compare>(k, v);
+						// child = newNode(k, v);
 						root->left = child;
 						child->parent = root;
 						child->left = NULL;
@@ -494,7 +518,7 @@ namespace ft
 						else
 							newNode->color = target->color;
 						trans(target, newNode);
-						delete target;
+						dealloNode(target);
 						if (checker)
 							erase_fix_up(newNode->left, newNode);
 					}
@@ -515,7 +539,7 @@ namespace ft
 						else
 							newNode->color = target->color;
 						trans(target, newNode);
-						delete target;
+						dealloNode(target);
 						if (checker)
 							erase_fix_up(newNode->right, newNode);
 					}
