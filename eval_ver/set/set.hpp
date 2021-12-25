@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 14:02:54 by skim              #+#    #+#             */
-/*   Updated: 2021/12/08 16:34:57 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/25 16:45:05 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,6 @@ namespace ft
 
 			size_type				erase(const key_type &key)
 			{
-				// std::cout << "홋쨔 키 옛다 " << key << std::endl;
 				if (num_of_ele == 0)
 					return (0);
 				else

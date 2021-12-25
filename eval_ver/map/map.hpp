@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2021/12/21 16:21:32 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/25 16:44:20 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ namespace ft
 			{
 				(void)comp;
 				(void)alloc;
-				// svr = new ft::saver<Key, T, Compare>();
 				svr = svr->newSaver();
 			}
 			// range constructor
@@ -91,18 +90,14 @@ namespace ft
 			{
 				(void)comp;
 				(void)alloc;
-				// svr = new ft::saver<Key, T, Compare>();
 				svr = svr->newSaver();
 				insert(first, last);
 			}
 			// copy constructor
 			map (const map &x) : root(NULL), num_of_ele(0)
 			{
-				// root = new node<Key, T, Compare>(*(x.root));
 				root = root->newNode(*(x.root));
-				// root = root->newNode(x.root->ip.first, x.root->ip.second);
 				num_of_ele = x.num_of_ele;
-				// svr = new ft::saver<Key, T, Compare>();
 				svr = svr->newSaver();
 				setSV();
 			}
@@ -111,8 +106,6 @@ namespace ft
 			map<Key, T, Compare, Alloc>	&operator=(const map<Key, T, Compare, Alloc> &x)
 			{
 				root->deleteAll(root);
-				// root = root->newNode(x.root->ip.first, x.root->ip.second);
-				// root = new node<Key, T, Compare>(*(x.root));
 				root = root->newNode(*(x.root));
 				num_of_ele = x.num_of_ele;
 				setSV();
@@ -148,7 +141,6 @@ namespace ft
 				if (num_of_ele == 0)
 				{
 					num_of_ele++;
-					// root = new node<Key, T, Compare>(key);
 					root = root->newNode(key, mapped_type());
 					setSV();
 					return (root->ip.second);
@@ -169,8 +161,6 @@ namespace ft
 			}
 
 			/**modifiers**/
-			// map의 insert 구조에 대해 좀 더 파악해 볼 것
-			// 모든 insert가 첫번째 insert를 call 하게 됨
 			pair<iterator, bool>	insert(const value_type &x)
 			{
 				node<Key, T, Compare>	*ret;
@@ -178,7 +168,6 @@ namespace ft
 				if (num_of_ele == 0)
 				{
 					num_of_ele++;
-					// root = new node<Key, T, Compare>(x.first, x.second);
 					root = root->newNode(x.first, x.second);
 					setSV();
 					return (pair<iterator, bool>(iterator(root, svr), true));
@@ -306,9 +295,6 @@ namespace ft
 			// lower_bound, upper_bound에 대해 좀 더 알아볼 것!
 			iterator		lower_bound(const key_type &key)
 			{
-				// if (num_of_ele == 0)
-				// 	return (iterator(NULL, svr));
-				// return (iterator(root->getLowerBound(root, key), svr));
 				iterator it = begin();
 
 				for (; it != end(); ++it)

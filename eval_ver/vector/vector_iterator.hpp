@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/29 19:21:43 by skim              #+#    #+#             */
-/*   Updated: 2021/11/06 17:25:15 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/25 16:43:04 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -466,7 +466,7 @@ namespace ft
 			vectorReverseConstIterator(T *ptr = NULL) : ptr(ptr) {}
 			vectorReverseConstIterator(const vectorReverseConstIterator<T> &origin) : ptr(origin.ptr) {}
 			vectorReverseConstIterator(const vectorReverseIterator<T> &origin) : ptr(origin.getPtr()) {}
-			vectorReverseConstIterator(const vectorConstIterator<T> &origin) : ptr(origin.getPtr() - 1) {} // target.getPtr() 인가??
+			vectorReverseConstIterator(const vectorConstIterator<T> &origin) : ptr(origin.getPtr() - 1) {} 
 			vectorReverseConstIterator(const vectorIterator<T> &origin) : ptr(origin.getPtr() - 1) {}
 
 			vectorReverseConstIterator<T>	&operator=(const vectorReverseConstIterator<T> &target)

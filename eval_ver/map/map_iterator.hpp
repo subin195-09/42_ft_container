@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 20:03:33 by skim              #+#    #+#             */
-/*   Updated: 2021/12/21 15:24:04 by skim             ###   ########.fr       */
+/*   Updated: 2021/12/25 16:44:42 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ namespace ft
 			bool	operator!=(const mapIterator<Key, T, Compare> &origin) const { return (!(this->operator==(origin))); }
 			bool	operator!=(const mapConstIterator<Key, T, Compare> &origin) const { return (!(this->operator==(origin))); }
 
-			// red_black tree를 구성 후 좀 더 연구해볼 것
 			node<Key, T, Compare>	*getNow(void) const { return (now); }
 			saver<Key, T, Compare> 	*getSV(void) const { return (svr); }
 
@@ -251,7 +250,6 @@ namespace ft
 			pair<const Key, T> &operator*(void) const { return (now->ip); }
 			pair<const Key, T> *operator->(void) const { return (&(this->operator*())); }
 
-			// next, prev가 반대여야 하지 않나..??
 			mapReverseIterator<Key, T, Compare>	&operator++(void)
 			{
 				now = getNext();
