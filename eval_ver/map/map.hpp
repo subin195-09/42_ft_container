@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 19:59:26 by skim              #+#    #+#             */
-/*   Updated: 2022/01/14 01:00:32 by skim             ###   ########.fr       */
+/*   Updated: 2022/01/25 18:01:16 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -292,7 +292,6 @@ namespace ft
 				return (1);
 			}
 
-			// lower_bound, upper_bound에 대해 좀 더 알아볼 것!
 			iterator		lower_bound(const key_type &key)
 			{
 				iterator it = begin();
