@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 14:37:03 by skim              #+#    #+#             */
-/*   Updated: 2021/12/21 17:02:39 by skim             ###   ########.fr       */
+/*   Updated: 2022/01/25 17:53:41 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void printContainers(TESTED_NAMESPACE::vector< T > const &vct,
   const std::string isCapacityOk = (capacity >= size) ? "OK" : "KO";
 
   std::cout << "size: " << size << std::endl;
-  std::cout << "capacity: " << isCapacityOk << std::endl;
   if (print_content) {
     typename TESTED_NAMESPACE::vector< T >::const_iterator it = vct.begin();
     typename TESTED_NAMESPACE::vector< T >::const_iterator ite = vct.end();
@@ -74,27 +73,6 @@ int main() {
   TESTED_NAMESPACE::vector< TESTED_TYPE > v_riter(v_iterator.rbegin(),
                                                   v_iterator.rend());
   printContainers(v_riter);
-
-  std::cout << "  == size / resize / capacity test ==" << std::endl;
-  TESTED_NAMESPACE::vector< TESTED_TYPE > v_size(10);
-  for (unsigned int i = 0; i < v_size.size(); ++i) {
-    v_size[i] = i * 3;
-  }
-  std::cout << "capacity before resize: " << v_size.capacity() << std::endl;
-  printContainers(v_size);
-  std::cout << "resize to size 15\n..." << std::endl;
-  v_size.resize(15);
-  std::cout << "capacity after resize: " << v_size.capacity() << std::endl;
-  printContainers(v_size, false);
-
-  std::cout << "  == reserve test ==" << std::endl;
-  TESTED_NAMESPACE::vector< TESTED_TYPE > v_reserve;
-
-  std::cout << "capacity before reserve: " << v_reserve.capacity() << std::endl;
-  printContainers(v_reserve, false);
-  v_reserve.reserve(7);
-  std::cout << "capacity after reserve: " << v_reserve.capacity() << std::endl;
-  printContainers(v_reserve);
 
   std::cout << "  == [] / at / front / back test ==" << std::endl;
   TESTED_NAMESPACE::vector< TESTED_TYPE > v_element(7);
@@ -154,7 +132,6 @@ int main() {
     v_pushpop.push_back((i * 7) % 4);
     std::cout << "PUSH " << i + 1 << std::endl;
     std::cout << "size: " << v_pushpop.size() << std::endl;
-    std::cout << "capacity: " << v_pushpop.capacity() << std::endl;
     std::cout << "..." << std::endl;
   }
   std::cout << "DONE.\n" << std::endl;
@@ -168,7 +145,6 @@ int main() {
   std::cout << "POP!" << std::endl;
   v_pushpop.pop_back();
   printContainers(v_pushpop);
-  std::cout << "capacity: " << v_pushpop.capacity() << std::endl;
 
   std::cout << "  == insert / erase test ==" << std::endl;
   TESTED_NAMESPACE::vector< TESTED_TYPE > v_insert;

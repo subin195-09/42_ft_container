@@ -6,7 +6,7 @@
 /*   By: skim <skim@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/16 14:36:57 by skim              #+#    #+#             */
-/*   Updated: 2021/12/21 17:02:33 by skim             ###   ########.fr       */
+/*   Updated: 2022/01/25 17:53:33 by skim             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,5 @@ int main() {
 
   std::cout << "operator >=" << std::endl;
   std::cout << ((lhs >= rhs) ? "OK" : "KO") << std::endl;
-
   // system("leaks map_test");
 }
